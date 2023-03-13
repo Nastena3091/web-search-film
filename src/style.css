@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    background:#231510 url("/src/assets/tl.webp") no-repeat center;
+    background-size: cover;
+}
+
