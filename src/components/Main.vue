@@ -39,9 +39,9 @@ export default({
 
 
 <template>
-  <!-- <button class="button p-5" @click="getDataFromServer" @auxclick="decrement">{{count}}</button>
+  <button class="button p-5" @click="getDataFromServer" @auxclick="decrement">{{count}}</button>
   <h1>{{dataFilmTitle}}</h1>
-  <img :src="dataFilm.img" alt=""> -->
+  <img :src="dataFilm.img" alt="">
 
   <main class="flex-col">
     <div class="container top mr-auto ml-auto">
