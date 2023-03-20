@@ -2,10 +2,10 @@ import { createStore } from "vuex";
 
 const store = createStore({
     state: {
-        count: 1,
-        dataFilm:[],
-        AllDataFilms:[],
-        objectNumber: 1,
+        film: {},
+        lastFilm:{},
+        films: [],
+        numb: 0,
         options: {
             method: 'GET',
             headers: {
@@ -13,29 +13,30 @@ const store = createStore({
                 'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
             }
         },
-      },
+    },
     mutations: {
-        increment: state => state.count++,
-        decrement: state => state.count--,
-        getDataFromServer: state => {
-            return fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=date&type=movie', state.options)
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                    state.AllDataFilms=response.results;
-                })
-                .catch(err => console.error(err));
+        SET_FILMS: (state) => {
+            fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&type=movie', state.options)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                state.films = response.results;
+            })
+            .catch(err => console.error(err));
         },
-        getDataSingleFilm: state => state.dataFilm=state.AllDataFilms[state.objectNumber]
-        },
+        SET_FILM: (state, film) => {state.film = film; console.log(state.film)},
+        SET_LASTFILM: (state, lastFilm) => {state.lastFilm = lastFilm;console.log(state.lastFilm)},
+        SET_NUMB:(state, numb=0) => {state.numb = numb; console.log(state.numb)}
+    },
+    actions:{
+        SET_FILMS({commit}){commit('SET_FILMS')},
+        SET_FILM({commit},payload){commit('SET_FILM',payload)},
+        SET_LASTFILM({commit},payload){commit('SET_LASTFILM',payload)}
+    },
     getters: {
-        count: state => state.count,
-        dataFilmTitle: state => {
-            if(state.dataFilm.length>0){
-                 return state.dataFilm.title.replace('&#39;', "'")
-            }
-        },
-        dataFilm: state => state.dataFilm,
+        getLastFilm: state => state.lastFilm,
+        getFilm: state => state.film,
+        getFilms: state => state.films,
     }
   })
 

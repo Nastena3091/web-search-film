@@ -2,7 +2,7 @@
     <main class="flex-col">
     <div class="container mr-auto ml-auto">
       <section class="flex w-2/5">
-        <img src="/src/assets/poster.png" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
+        <img :src="film.img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
         <div class="container mr-auto ml-auto h-16">
           <div class="flex">
             <div>
@@ -16,15 +16,15 @@
       </section>
       <section class="w-3/5 pr-10 pl-10">
         <div class="bg-gray-400 overflow-hidden  blocks">
-          <div class="bg-yellow-300 text-lg font-medium p-5">НАЗВА</div>
-          <div class="bg-gray-300 mt-5 h-max text-justify p-2">Опис</div>
+          <div class="bg-yellow-300 text-lg font-medium p-5">{{ film.title }}</div>
+          <div class="bg-gray-300 mt-5 h-max text-justify p-2">{{ film.synopsis }}</div>
           <div class="bg-gray-300 mt-5 h-max text-justify overflow-hidden">
             <table>
               <tr><td class="w-max">Жанр</td>       <td class="w-full"></td></tr>
               <tr><td class="w-max">Режисери</td>   <td class="w-full"></td></tr>
               <tr><td class="w-max">Сценаристи</td> <td class="w-full"></td></tr>
-              <tr><td class="w-max">Акторы</td>     <td class="w-full"></td></tr>
-              <tr><td class="w-max">Рейтинг</td>    <td class="w-full"></td></tr>
+              <tr><td class="w-max">Актори</td>     <td class="w-full"></td></tr>
+              <tr><td class="w-max">Рейтинг</td>    <td class="w-full">{{ film.rating }}</td></tr>
             </table>
             </div>
         </div>
@@ -34,12 +34,22 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
-    return {};
+    return {
+      film:{}
+    };
   },
-  mounted() {},
+  mounted() {
+    this.film=JSON.parse(localStorage.getItem('Film'))
+    // this.film=this.getFilm
+  },
   methods: {},
+  computed:{
+    ...mapGetters(['getFilm'])
+  }
 };
 </script>
 

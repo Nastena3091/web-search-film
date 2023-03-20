@@ -3,65 +3,93 @@ import { mapGetters } from 'vuex'
 export default({
   data(){
     return{
-      objectNumber:1,
-      dataFilm:[{
-        imdb_id:"",
-        netflix_id:0,
-        poster:"",
-        rating:"",
-        runtime:"",
-        synopsis:"",
-        title:"",
-        year:"",
-        img:"",
-      }]
+      films:[],
+    film:[{},{img:'/src/assets/gray.jpg'},{img:'/src/assets/gray.jpg'}],
     }
   },
   mounted(){
-
+    this.film[1]=JSON.parse(localStorage.getItem('Film'))
+    if(JSON.parse(localStorage.getItem('LastFilm'))){
+      this.film[2]=JSON.parse(localStorage.getItem('LastFilm'))
+      this.$store.commit('SET_LASTFILM', this.film[2])
+    }
+    if(this.film[1].img=='/src/assets/gray.jpg'){
+      this.$store.dispatch('SET_FILMS')
+      this.getMovie()
+    }else if(this.film[1].img!='/src/assets/gray.jpg'){
+      this.$store.commit('SET_FILM', this.film[1])
+    }
   },
   methods:{
-    increment(){
-      this.$store.commit('increment')
+     getMovie(){
+      if(this.getFilms.length>0){
+        console.log(this.getFilms.length)
+        this.films=this.getFilms
+        this.randomNumber=Math.floor(Math.random()*this.films.length)
+        this.$store.commit('SET_NUMB', this.randomNumber)
+        if(!this.film[1]){
+          this.film[1]=this.films[this.randomNumber]
+          localStorage.setItem('Film', JSON.stringify(this.film[1]))
+          this.$store.dispatch('SET_FILM',this.film[1])
+        }else{
+          this.film[0]=this.films[this.randomNumber]
+          localStorage.setItem('Film', JSON.stringify(this.film[0]))
+          this.$store.dispatch('SET_FILM',this.film[0])
+          this.film[2]=this.film[1]
+          if (this.films[2]){
+            localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
+            this.$store.dispatch('SET_LASTFILM', this.film[2])
+          }
+          this.film[1]=this.film[0]
+        }
+        
+    } else{
+      console.log(this.getFilms.length)
+      this.$store.dispatch('SET_FILMS')
+    }
     },
-    decrement(){
-      this.$store.commit('decrement')
-    },
-    getDataFromServer(){
-      this.$store.commit('getDataFromServer')
+    getLastMovie(){
+      if(this.film[2].img!='/src/assets/gray.jpg'){
+        this.film[0]=this.film[1]
+        this.film[1]=this.film[2]
+        this.film[2]=this.film[0]
+        this.film[0]={}
+        this.$store.commit('SET_FILM', this.film[1])
+        this.$store.commit('SET_LASTFILM', this.film[2])
+      }
     }
   },
   computed:{
-    ...mapGetters(['count','dataFilmTitle','dataFilm']),
+    ...mapGetters(['getFilm','getFilms','getLastFilm']),
   }
 })
 </script>
 
 
 <template>
-  <button class="button p-5" @click="getDataFromServer" @auxclick="decrement">{{count}}</button>
-  <h1>{{dataFilmTitle}}</h1>
-  <img :src="dataFilm.img" alt="">
+  <!-- <button class="button p-5" @click="getMovie">Генерувати</button>
+  <h1>{{film.title}}</h1>
+  <img :src="film.img" alt=""> -->
 
   <main class="flex-col">
     <div class="container top mr-auto ml-auto">
       <section>
-        <img src="/src/assets/poster.png" alt="" class="section blocks">
+        <img :src="film[2].img" alt="" class="section blocks">
       </section>
       <section>
-        <img src="/src/assets/poster.png" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="blocks">
+        <img :src="film[1].img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="blocks">
       </section>
       <section>
         <div class="section blocks bg-gray-400 overflow-hidden">
-          <div class="bg-yellow-300 text-lg font-medium p-5">НАЗВА</div>
-          <div class="bg-gray-300 mt-5 h-full">Опис</div>
+          <div class="bg-yellow-300 text-lg font-medium p-5">{{ film[1].title }}</div>
+          <div class="bg-gray-300 mt-5 h-full p-2 text-justify">{{ film[1].synopsis }}</div>
         </div>
         
       </section>
     </div>
     <div class="container bottom mr-auto ml-auto">
       <section> 
-        <button class="p-1 w-40 blocks button">Попереднє</button></section>
+        <button class="p-1 w-40 blocks button" @click="getLastMovie">Попереднє</button></section>
       <div class="flex">
         <div>
           <button class="small-button blocks button"><img src="/src/assets/like.png" alt="" class="w-9 h-9"></button>
@@ -71,11 +99,11 @@ export default({
         </div>
       </div>
       <section>
-        <button class="p-1 w-40 blocks button">Детальніше</button>
+        <a href="#/details"><button class="p-1 w-40 blocks button" >Детальніше</button></a>
       </section>
     </div>
     <div class="container mr-auto ml-auto">
-      <button class="main-button">ГЕНЕРУВАТИ</button>
+      <button class="main-button" @click="getMovie">ГЕНЕРУВАТИ</button>
     </div>
   </main>
 </template>
