@@ -1,52 +1,70 @@
 <script>
-import { mapGetters } from 'vuex'
+
 export default({
   data(){
     return{
       films:[],
-    film:[{},{img:'/src/assets/gray.jpg'},{img:'/src/assets/gray.jpg'}],
+      film:[{},{img:'/src/assets/gray.jpg'},{img:'/src/assets/gray.jpg'}],
+      randomNumber: 0,
+      isLoading:true,
+      options:{
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '446a849920msh40579f805fb4bffp15077ajsn780f820fb8f3',
+            'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
+        }
+      }
     }
   },
   mounted(){
-    this.film[1]=JSON.parse(localStorage.getItem('Film'))
+    this.SET_FILMS()
+    if (JSON.parse(localStorage.getItem('Film'))){
+      this.film[1]=JSON.parse(localStorage.getItem('Film'))
+    }
     if(JSON.parse(localStorage.getItem('LastFilm'))){
       this.film[2]=JSON.parse(localStorage.getItem('LastFilm'))
-      this.$store.commit('SET_LASTFILM', this.film[2])
     }
     if(this.film[1].img=='/src/assets/gray.jpg'){
-      this.$store.dispatch('SET_FILMS')
-      this.getMovie()
+      if(this.films.length>0){
+        this.randomNumber=Math.floor(Math.random()*this.films.length)
+        this.film[1]=this.films[this.randomNumber]
+        localStorage.setItem('Film', JSON.stringify(this.film[1]))
+      }
     }else if(this.film[1].img!='/src/assets/gray.jpg'){
-      this.$store.commit('SET_FILM', this.film[1])
+
     }
   },
   methods:{
      getMovie(){
-      if(this.getFilms.length>0){
-        console.log(this.getFilms.length)
-        this.films=this.getFilms
+      if(this.films.length>0){
+        console.log(this.films.length)
         this.randomNumber=Math.floor(Math.random()*this.films.length)
-        this.$store.commit('SET_NUMB', this.randomNumber)
         if(!this.film[1]){
           this.film[1]=this.films[this.randomNumber]
           localStorage.setItem('Film', JSON.stringify(this.film[1]))
-          this.$store.dispatch('SET_FILM',this.film[1])
         }else{
           this.film[0]=this.films[this.randomNumber]
           localStorage.setItem('Film', JSON.stringify(this.film[0]))
-          this.$store.dispatch('SET_FILM',this.film[0])
           this.film[2]=this.film[1]
           if (this.films[2]){
             localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
-            this.$store.dispatch('SET_LASTFILM', this.film[2])
           }
           this.film[1]=this.film[0]
         }
-        
-    } else{
-      console.log(this.getFilms.length)
-      this.$store.dispatch('SET_FILMS')
-    }
+      } else{
+        console.log(this.films.length)
+        this.SET_FILMS()
+      }
+    },
+    SET_FILMS() {
+      fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&type=movie', this.options)
+      .then(response => response.json())
+      .then(response => {
+          console.log(response)
+          this.films=response.results;
+          this.isLoading=false
+      })
+      .catch(err => console.error(err));
     },
     getLastMovie(){
       if(this.film[2].img!='/src/assets/gray.jpg'){
@@ -54,14 +72,11 @@ export default({
         this.film[1]=this.film[2]
         this.film[2]=this.film[0]
         this.film[0]={}
-        this.$store.commit('SET_FILM', this.film[1])
-        this.$store.commit('SET_LASTFILM', this.film[2])
+        localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
+        localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
     }
   },
-  computed:{
-    ...mapGetters(['getFilm','getFilms','getLastFilm']),
-  }
 })
 </script>
 

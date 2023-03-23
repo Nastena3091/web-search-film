@@ -44,12 +44,9 @@ export default {
   },
   mounted() {
     this.film=JSON.parse(localStorage.getItem('Film'))
-    // this.film=this.getFilm
+    
   },
   methods: {},
-  computed:{
-    ...mapGetters(['getFilm'])
-  }
 };
 </script>
 
