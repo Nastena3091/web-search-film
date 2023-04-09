@@ -3,6 +3,7 @@
 export default({
   data(){
     return{
+      limit:0,
       films:[],
       film:[{},{img:'/src/assets/gray.jpg'},{img:'/src/assets/gray.jpg'}],
       randomNumber: 0,
@@ -10,14 +11,19 @@ export default({
       options:{
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': '446a849920msh40579f805fb4bffp15077ajsn780f820fb8f3',
-            'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
+          'X-RapidAPI-Key': 'c50076e3c3msh3189de4fc39be4fp121294jsn9bcaafdc0139',
+          'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
         }
       }
     }
   },
   mounted(){
-    this.SET_FILMS()
+    if(JSON.parse(localStorage.getItem('limit'))){
+      this.limit=JSON.parse(localStorage.getItem('limit'))
+    }
+    if(this.limit!=80){
+      this.SET_FILMS()
+    }
     if (JSON.parse(localStorage.getItem('Film'))){
       this.film[1]=JSON.parse(localStorage.getItem('Film'))
     }
@@ -57,6 +63,9 @@ export default({
       }
     },
     SET_FILMS() {
+      this.limit++
+      console.log(this.limit)
+      localStorage.setItem('limit', this.limit)
       fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&type=movie', this.options)
       .then(response => response.json())
       .then(response => {

@@ -39,14 +39,77 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      film:{}
+      limit:0,
+      film:{},
+      info: {},
+      options:{
+        method: 'GET',
+        headers: {
+          'X-RapidAPI-Key': 'c50076e3c3msh3189de4fc39be4fp121294jsn9bcaafdc0139',
+          'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
+        }
+      },
     };
   },
   mounted() {
     this.film=JSON.parse(localStorage.getItem('Film'))
+    if(JSON.parse(localStorage.getItem('info'))){
+      this.info=JSON.parse(localStorage.getItem('info'))
+    }
+    if(JSON.parse(localStorage.getItem('limit'))){
+      this.limit=JSON.parse(localStorage.getItem('limit'))
+    }
+    if(!this.info.detail){
+      if(this.limit!=80){
+        this.SET_INFO()
+    }} else{
+        if(this.film.netflix_id!=this.info.detail.netflix_id){
+              if(this.limit!=80){
+              this.SET_INFO()
+              console.log(this.film.netflix_id +" - film")
+            }}
+    }
+    
+    
+    
+    
     
   },
-  methods: {},
+  methods: {
+    SET_INFO(){
+      this.limit++
+      fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/genres?netflix_id=${this.film.netflix_id}`, this.options)
+        .then(response => response.json())
+        .then(response => {
+          this.info.genre = response.results
+          console.log(response.results)
+        })
+        .catch(err => console.error(err));
+      setTimeout(()=>{fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/details?netflix_id=${this.film.netflix_id}`, this.options)
+        .then(response => response.json())
+        .then(response => {
+          this.info.detail = response
+          console.log(response)
+        })
+        .catch(err => console.error(err))},1000)
+        this.limit++
+        this.limit++
+      setTimeout(()=>{fetch(`https://unogs-unogs-v1.p.rapidapi.com/search/people?netflix_id=${this.film.netflix_id}`, this.options)
+        .then(response => response.json())
+        .then(response => {
+          this.info.people = response.results
+          console.log(response.results)
+        })
+        .catch(err => console.error(err))},2000)
+      setTimeout(()=>{
+        console.log(this.info)
+        localStorage.setItem('info', JSON.stringify(this.info))
+        console.log(this.info.detail.netflix_id +" - info")
+      },4000)
+      console.log(this.limit)
+      localStorage.setItem('limit', this.limit)
+    }
+  },
 };
 </script>
 
