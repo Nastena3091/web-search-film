@@ -21,7 +21,7 @@ export default({
     if(JSON.parse(localStorage.getItem('limit'))){
       this.limit=JSON.parse(localStorage.getItem('limit'))
     }
-    if(this.limit!=80){
+    if(this.limit<=80){
       this.SET_FILMS()
     }
     if (JSON.parse(localStorage.getItem('Film'))){
@@ -86,19 +86,23 @@ export default({
       }
     }
   },
+  computed:{
+    synopsis(){
+      if (this.film[1].synopsis)
+        return this.film[1].synopsis.replace('&#39;',"'")
+    }
+  }
 })
 </script>
 
 
 <template>
-  <!-- <button class="button p-5" @click="getMovie">Генерувати</button>
-  <h1>{{film.title}}</h1>
-  <img :src="film.img" alt=""> -->
+
 
   <main class="flex-col">
     <div class="container top mr-auto ml-auto">
       <section>
-        <img :src="film[2].img" alt="" class="section blocks">
+        <img :src="film[2].img" alt="" class="section blocks" v-show="film[2].img!='/src/assets/gray.jpg'">
       </section>
       <section>
         <img :src="film[1].img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="blocks">
@@ -106,14 +110,15 @@ export default({
       <section>
         <div class="section blocks bg-gray-400 overflow-hidden">
           <div class="bg-yellow-300 text-lg font-medium p-5">{{ film[1].title }}</div>
-          <div class="bg-gray-300 mt-5 h-full p-2 text-justify">{{ film[1].synopsis }}</div>
+          <div class="bg-gray-300 mt-5 h-full p-2 text-justify">{{ synopsis }}</div>
         </div>
         
       </section>
     </div>
     <div class="container bottom mr-auto ml-auto">
       <section> 
-        <button class="p-1 w-40 blocks button" @click="getLastMovie">Попереднє</button></section>
+        <button class="p-1 w-40 blocks button" @click="getLastMovie" v-show="film[2].img!='/src/assets/gray.jpg'">Попереднє</button>
+        </section>
       <div class="flex">
         <div>
           <button class="small-button blocks button"><img src="/src/assets/like.png" alt="" class="w-9 h-9"></button>
@@ -123,7 +128,7 @@ export default({
         </div>
       </div>
       <section>
-        <a href="#/details"><button class="p-1 w-40 blocks button" >Детальніше</button></a>
+        <a href="#/details"><button class="p-1 w-40 blocks button" v-show="film[1].img!='/src/assets/gray.jpg'">Детальніше</button></a>
       </section>
     </div>
     <div class="container mr-auto ml-auto">

@@ -2,7 +2,7 @@
     <main class="flex-col">
     <div class="container mr-auto ml-auto">
       <section class="flex w-2/5">
-        <img :src="film.img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
+        <img :src="info.detail.large_image ? info.detail.large_image : film.img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
         <div class="container mr-auto ml-auto h-16">
           <div class="flex">
             <div>
@@ -16,15 +16,17 @@
       </section>
       <section class="w-3/5 pr-10 pl-10">
         <div class="bg-gray-400 overflow-hidden  blocks">
-          <div class="bg-yellow-300 text-lg font-medium p-5">{{ film.title }}</div>
-          <div class="bg-gray-300 mt-5 h-max text-justify p-2">{{ film.synopsis }}</div>
+          <div class="bg-yellow-300 text-lg font-medium p-5">{{ info.detail.title }} ( {{ info.detail.year }} )</div>
+          <div class="bg-gray-300 mt-5 h-max text-justify p-2">{{ synopsis }}</div>
           <div class="bg-gray-300 mt-5 h-max text-justify overflow-hidden">
             <table>
-              <tr><td class="w-max">Жанр</td>       <td class="w-full"></td></tr>
-              <tr><td class="w-max">Режисери</td>   <td class="w-full"></td></tr>
-              <tr><td class="w-max">Сценаристи</td> <td class="w-full"></td></tr>
-              <tr><td class="w-max">Актори</td>     <td class="w-full"></td></tr>
-              <tr><td class="w-max">Рейтинг</td>    <td class="w-full">{{ film.rating }}</td></tr>
+
+              <tr v-show="runtime!='0 : 0 : 0'"><td class="w-max">Тривалість</td> <td class="w-full">{{ runtime }}</td></tr>
+              <tr v-show="genre"><td class="w-max">Жанр</td>       <td class="w-full">{{ genre }}</td></tr>
+              <tr v-show="directors"><td class="w-max">Режисери</td>   <td class="w-full">{{ directors }}</td></tr>
+              <tr v-show="creators"><td class="w-max">Сценаристи</td> <td class="w-full">{{ creators }}</td></tr>
+              <tr v-show="actors"><td class="w-max">Актори</td>     <td class="w-full">{{ actors }}</td></tr>
+              <tr v-show="info.detail.rating || film.rating"><td class="w-max">Рейтинг</td>    <td class="w-full">{{ info.detail.rating ? info.detail.rating : film.rating }}</td></tr>
             </table>
             </div>
         </div>
@@ -34,14 +36,38 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
       limit:0,
       film:{},
-      info: {},
+      info: {
+        detail:{
+          title:'',
+          year:'',
+          synopsis:'',
+          runtime:'',
+          rating:'',
+          netflix_id:'',
+          large_image:'',
+          alt_runtime:'',
+        },
+        genreList:[
+          {
+            genre:'',
+            genre_id:0
+          }
+        ],
+        people:[
+          {
+            netflix_id:0,
+            full_name:'',
+            person_type:'',
+            title:'',
+          }
+        ]
+      },
       options:{
         method: 'GET',
         headers: {
@@ -59,21 +85,18 @@ export default {
     if(JSON.parse(localStorage.getItem('limit'))){
       this.limit=JSON.parse(localStorage.getItem('limit'))
     }
-    if(!this.info.detail){
-      if(this.limit!=80){
+    if(!this.info.detail.netflix_id){
+      if(this.limit<=80){
         this.SET_INFO()
-    }} else{
-        if(this.film.netflix_id!=this.info.detail.netflix_id){
-              if(this.limit!=80){
-              this.SET_INFO()
-              console.log(this.film.netflix_id +" - film")
-            }}
+      }
+    } else {
+      if(this.film.netflix_id!=this.info.detail.netflix_id){
+        if(this.limit<=80){
+          this.SET_INFO()
+          console.log(this.film.netflix_id +" - film")
+        }
+      }
     }
-    
-    
-    
-    
-    
   },
   methods: {
     SET_INFO(){
@@ -81,7 +104,7 @@ export default {
       fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/genres?netflix_id=${this.film.netflix_id}`, this.options)
         .then(response => response.json())
         .then(response => {
-          this.info.genre = response.results
+          this.info.genreList = response.results
           console.log(response.results)
         })
         .catch(err => console.error(err));
@@ -108,8 +131,49 @@ export default {
       },4000)
       console.log(this.limit)
       localStorage.setItem('limit', this.limit)
+    },
+    GET_PEOPLE(people){
+      let a=''
+      return this.info.people.map(elem=>{
+        if (elem.person_type==people && a!=elem.full_name){
+          a=elem.full_name
+          return elem.full_name
+        }
+      }).filter(elem=>elem!=undefined).join(', ')
     }
   },
+  computed:{
+    synopsis(){
+      if (this.film.synopsis)
+        return this.film.synopsis.replace('&#39;',"'")
+    },
+    runtime(){
+      let hour
+      let minute
+      let second
+      let time=this.info.detail.runtime
+      if(this.info.detail.runtime==''){
+        time=this.info.detail.alt_runtime
+      }
+      hour=Math.floor(time/3600)
+      minute=Math.floor(time%3600/60)
+      second=time-(minute*60+hour*3600)
+      console.log(hour+" : "+minute+" : "+second)
+      return hour+" : "+minute+" : "+second
+    },
+    genre(){
+      return this.info.genreList.map(elem => elem.genre).join(', ')
+    },
+    actors(){
+      return this.GET_PEOPLE("Actor")
+    },
+    directors(){
+      return this.GET_PEOPLE("Director")
+    },
+    creators(){
+      return this.GET_PEOPLE("Creator")
+    }
+  }
 };
 </script>
 

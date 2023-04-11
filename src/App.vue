@@ -2,12 +2,14 @@
 import Main from "./components/Main.vue"
 import Details from "./components/Details.vue"
 import Like from "./components/Like.vue"
+import Settings from "./components/Settings.vue"
 
 export default({
   components:{
       Main,
       Details,
-      Like
+      Like,
+      Settings
   },
   data(){
     return{
