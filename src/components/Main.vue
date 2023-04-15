@@ -23,6 +23,7 @@ export default({
     }
     if(this.limit<=80){
       this.SET_FILMS()
+      console.log(this.films);
     }
     if (JSON.parse(localStorage.getItem('Film'))){
       this.film[1]=JSON.parse(localStorage.getItem('Film'))
@@ -63,10 +64,27 @@ export default({
       }
     },
     SET_FILMS() {
+      let param
+      let obj
+      if(JSON.parse(localStorage.getItem('Param'))){
+        console.log(param);
+        param=JSON.parse(localStorage.getItem('Param'))
+        obj='end_rating='+param.rating[1]+'&start_year='+param.date[0]+'&order_by='+param.order_by+'&end_year='+param.date[1]+'&start_rating='+param.rating[0]
+        if(param.country.length!=0){
+          obj+='&param='+param.country.join(',')
+        }
+        if(param.type){
+          obj+='&type='+param.type
+        }
+        if(param.genre&&param.genre!=0){
+          obj+='&genre_list='+param.genre
+        }
+      }
       this.limit++
       console.log(this.limit)
+      console.log(obj);
       localStorage.setItem('limit', this.limit)
-      fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?order_by=rating&type=movie', this.options)
+      fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?'+obj, this.options)
       .then(response => response.json())
       .then(response => {
           console.log(response)
@@ -132,7 +150,7 @@ export default({
       </section>
     </div>
     <div class="container mr-auto ml-auto">
-      <button class="main-button" @click="getMovie">ГЕНЕРУВАТИ</button>
+      <button class="main-button" @click="getMovie" :disabled="films.length==0">ГЕНЕРУВАТИ</button>
     </div>
   </main>
 </template>
@@ -167,10 +185,7 @@ section div {
   @apply rounded-3xl;
 }
 .main-button {
-  @apply bg-yellow-300 p-3 font-medium rounded-full text-xl mt-5;
-}
-.main-button:hover{
-  @apply bg-yellow-200 transition-all
+  @apply bg-yellow-300 p-3 font-medium rounded-full text-xl mt-5 hover:bg-yellow-200 hover:transition-all disabled:bg-yellow-100 disabled:text-gray-300;
 }
 .button {
   @apply bg-gray-300 rounded-3xl text-lg overflow-hidden contrast-75;
