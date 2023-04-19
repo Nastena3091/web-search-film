@@ -78,7 +78,7 @@ export default {
     };
   },
   mounted() {
-    this.film=JSON.parse(localStorage.getItem('Film'))
+    this.film.netflix_id=this.$route.params.netflix_id
     if(JSON.parse(localStorage.getItem('info'))){
       this.info=JSON.parse(localStorage.getItem('info'))
     }
@@ -144,8 +144,13 @@ export default {
   },
   computed:{
     synopsis(){
-      if (this.film.synopsis)
-        return this.film.synopsis.replace('&#39;',"'")
+      if (this.info.detail.synopsis){
+        while(this.info.detail.synopsis.search("&#39;")!=-1){
+          console.log(this.info.detail.synopsis);
+          this.info.detail.synopsis=this.info.detail.synopsis.replace('&#39;',"'")
+        }
+      }
+      return this.info.detail.synopsis
     },
     runtime(){
       let hour

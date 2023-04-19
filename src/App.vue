@@ -27,10 +27,10 @@ export default({
   <div>
     <nav class="max-w-max bg-yellow-300 rounded-b-3xl ml-auto mr-auto flex justify-center items-center overflow-hidden">
       <ul class="list-none flex justify-center items-center">
-          <li class="divider"><a href="#/main"><img src="/src/assets/home.png"></a><a href="#/main">ГОЛОВНА</a></li>
-          <li class="divider"><a href="#/settings"><img src="/src/assets/setting.png"></a><a href="#/settings">НАЛАШТУВАННЯ</a></li>
-          <li class="divider"><a href="#"><img src="/src/assets/like.png"></a><a href="#">УЛЮБЛЕНІ</a></li>
-          <li><a href="#"><img src="/src/assets/eye.png"></a><a href="#">ПЕРЕГЛЯНУТІ</a></li>
+          <li class="divider"><router-link to="/main"><img src="/src/assets/home.png"></router-link><router-link :to="{name:'main'}">ГОЛОВНА</router-link></li>
+          <li class="divider"><router-link to="/settings"><img src="/src/assets/setting.png"></router-link><router-link to="/settings">НАЛАШТУВАННЯ</router-link></li>
+          <li class="divider"><router-link to=""><img src="/src/assets/like.png"></router-link><router-link to="">УЛЮБЛЕНІ</router-link></li>
+          <li><router-link to=""><img src="/src/assets/eye.png"></router-link><router-link to="">ПЕРЕГЛЯНУТІ</router-link></li>
       </ul>
     </nav>
     <main class="w-4/5 mt-5 mb-4 mr-auto ml-auto rounded-3xl bg-gray-400/60 pt-2 pb-2">

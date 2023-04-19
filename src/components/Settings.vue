@@ -13,8 +13,8 @@ export default {
       genre:'',
       order_by:'rating',
       country:[],
-      rating:[1,10],
-      date:[1901,2023],
+      rating:[3,10],
+      date:[1910,2023],
       arrowType1:'',
       arrowType2:'arrow down',
       arrowType3:'',
@@ -23,7 +23,6 @@ export default {
   mounted(){
     let param
     if(JSON.parse(localStorage.getItem('Param'))){
-      console.log(param);
       param=JSON.parse(localStorage.getItem('Param'))
       this.type = param.type
       this.genre = param.genre
@@ -136,14 +135,14 @@ export default {
         <div class="hat">Тип твору</div>
         <div>
           <table>
-            <tr><td><input type="radio" v-model="type" value="movie" @click="changeType()"> Фільм</td></tr>
-            <tr><td><input type="radio" v-model="type" value="series" @click="changeType()"> Серіал</td></tr>
+            <tr><td><input type="radio" v-model="type" value="movie" @click="changeType"> Фільм</td></tr>
+            <tr><td><input type="radio" v-model="type" value="series" @click="changeType"> Серіал</td></tr>
             <tr><td><input type="radio" v-model="type" value=""> Неважливо</td></tr>
           </table>
         </div>
       </div>
       <div class=" flex justify-center">
-        <a href="#/main"><button class="main-button" @click="Save()">ЗБЕРЕГТИ</button></a>
+        <a href="#/main"><button class="main-button" @click="Save">ЗБЕРЕГТИ</button></a>
       </div>
       
     </section>

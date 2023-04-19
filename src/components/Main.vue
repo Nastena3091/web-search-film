@@ -5,9 +5,10 @@ export default({
     return{
       limit:0,
       films:[],
-      film:[{},{img:'/src/assets/gray.jpg'},{img:'/src/assets/gray.jpg'}],
+      film:[{like:'/src/assets/like.png'},{img:'/src/assets/gray.jpg' , netflix_id:0,like:'/src/assets/like.png', eye:'/src/assets/eye.png'},{img:'/src/assets/gray.jpg'}],
+      likes:[],
+      eyes:[],
       randomNumber: 0,
-      isLoading:true,
       options:{
         method: 'GET',
         headers: {
@@ -23,7 +24,6 @@ export default({
     }
     if(this.limit<=80){
       this.SET_FILMS()
-      console.log(this.films);
     }
     if (JSON.parse(localStorage.getItem('Film'))){
       this.film[1]=JSON.parse(localStorage.getItem('Film'))
@@ -37,20 +37,31 @@ export default({
         this.film[1]=this.films[this.randomNumber]
         localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
-    }else if(this.film[1].img!='/src/assets/gray.jpg'){
-
+    }else if(this.film[1].img!='/src/assets/gray.jpg'){}
+    if(JSON.parse(localStorage.getItem('likes'))){
+      this.likes=JSON.parse(localStorage.getItem('likes'))
+    }
+    if(JSON.parse(localStorage.getItem('eyes'))){
+      this.eyes=JSON.parse(localStorage.getItem('eyes'))
     }
   },
   methods:{
      getMovie(){
+      let arraySorted=[]
       if(this.films.length>0){
-        console.log(this.films.length)
+        arraySorted=this.films.filter(objSorted=>!this.likes.some(objLiked=>objLiked.netflix_id==objSorted.netflix_id)&&!this.eyes.some(objEyed=>objEyed.netflix_id==objSorted.netflix_id))
+        this.films=arraySorted
+        console.log(this.films)
         this.randomNumber=Math.floor(Math.random()*this.films.length)
         if(!this.film[1]){
           this.film[1]=this.films[this.randomNumber]
+          this.film[1].eye='/src/assets/eye.png'
+          this.film[1].like="/src/assets/like.png"
           localStorage.setItem('Film', JSON.stringify(this.film[1]))
         }else{
-          this.film[0]=this.films[this.randomNumber]
+          this.film[0]=this.films[this.randomNumber];
+          this.film[0].like="/src/assets/like.png"
+          this.film[0].eye='/src/assets/eye.png'
           localStorage.setItem('Film', JSON.stringify(this.film[0]))
           this.film[2]=this.film[1]
           if (this.films[2]){
@@ -71,7 +82,7 @@ export default({
         param=JSON.parse(localStorage.getItem('Param'))
         obj='end_rating='+param.rating[1]+'&start_year='+param.date[0]+'&order_by='+param.order_by+'&end_year='+param.date[1]+'&start_rating='+param.rating[0]
         if(param.country.length!=0){
-          obj+='&param='+param.country.join(',')
+          obj+='&country_list='+param.country.join(',')
         }
         if(param.type){
           obj+='&type='+param.type
@@ -89,7 +100,6 @@ export default({
       .then(response => {
           console.log(response)
           this.films=response.results;
-          this.isLoading=false
       })
       .catch(err => console.error(err));
     },
@@ -102,12 +112,40 @@ export default({
         localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
         localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
+    },
+    addToArray(array,property,nameInLocalStorage,wayTrue,wayFalse){
+      if(!array.some(film=>film.netflix_id == this.film[1].netflix_id)){
+        array.push({"img":this.film[1].img, "title":this.film[1].title, "netflix_id":this.film[1].netflix_id})
+        this.film[1][property]=wayTrue
+      } else if(array.findIndex(film => film.netflix_id === this.film[1].netflix_id)!==-1){
+        array.splice(array.findIndex(film => film.netflix_id === this.film[1].netflix_id),1)
+        this.film[1][property]=wayFalse
+      }
+      console.log(array);
+      localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
+    },
+    addLike(){
+      this.addToArray(this.likes,"like","likes","/src/assets/like-full.png","/src/assets/like.png")
+    },
+    addEye(){
+      this.addToArray(this.eyes,"eye","eyes","/src/assets/eye-full.png","/src/assets/eye.png")
+    },
+    deleteSymbols(obj,oldSymbol,updateSymbol){
+      if(obj){
+        while(obj.search(oldSymbol)!=-1){
+          console.log(obj);
+          obj = obj.replace(oldSymbol,updateSymbol)
+        }
+      }
+      return obj
     }
   },
   computed:{
     synopsis(){
-      if (this.film[1].synopsis)
-        return this.film[1].synopsis.replace('&#39;',"'")
+      return this.deleteSymbols(this.film[1].synopsis,'&#39;',"'")
+    },
+    title(){
+      return this.deleteSymbols(this.film[1].title,'&#39;',"'")
     }
   }
 })
@@ -139,14 +177,14 @@ export default({
         </section>
       <div class="flex">
         <div>
-          <button class="small-button blocks button"><img src="/src/assets/like.png" alt="" class="w-9 h-9"></button>
+          <button class="small-button blocks button" @click="addLike"><img :src="film[1].like" alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
         <div>
-          <button class="small-button blocks button"><img src="/src/assets/eye.png" alt="" class="w-9 h-9"></button>
+          <button class="small-button blocks button" @click="addEye"><img :src="film[1].eye"  alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
       </div>
       <section>
-        <a href="#/details"><button class="p-1 w-40 blocks button" v-show="film[1].img!='/src/assets/gray.jpg'">Детальніше</button></a>
+        <router-link :to="{name: 'details', params:{netflix_id: film[1].netflix_id} }"><button class="p-1 w-40 blocks button" v-show="film[1].img!='/src/assets/gray.jpg'">Детальніше</button></router-link>
       </section>
     </div>
     <div class="container mr-auto ml-auto">

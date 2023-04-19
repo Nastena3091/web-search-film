@@ -7,9 +7,9 @@ import Settings from './components/Settings.vue'
 export default createRouter({
     history: createWebHashHistory(),
     routes:[
-        { path: '/main', component: Main, alias: '/'},
-        { path: '/details', component: Details},
-        { path: '/like', component: Like},
-        { path: '/settings', component: Settings}
+        { path: '/main', name:'main', component: Main, alias: '/'},
+        { path: '/details/:netflix_id', name:'details', component: Details},
+        { path: '/data', name:'data', component: Like},
+        { path: '/settings', name:'settings', component: Settings}
     ]
 })
