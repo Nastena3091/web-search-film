@@ -2,21 +2,21 @@
     <main class="flex-col">
     <div class="container mr-auto ml-auto">
       <section class="flex w-2/5">
-        <img :src="info.detail.large_image ? info.detail.large_image : film.img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
+        <img :src="info.detail.large_image ? info.detail.large_image : info.detail.default_image" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="rounded-3xl">
         <div class="container mr-auto ml-auto h-16">
           <div class="flex">
             <div>
-              <button class="small-button blocks button"><img src="/src/assets/like.png" alt="" class="w-9 h-9"></button>
+              <button class="small-button blocks button" @click="addLike"><img :src="info.infoBase.like" alt="" class="w-9 h-9"></button>
             </div>
             <div>
-              <button class="small-button blocks button"><img src="/src/assets/eye.png" alt="" class="w-9 h-9"></button>
+              <button class="small-button blocks button" @click="addEye"><img :src="info.infoBase.eye"  alt="" class="w-9 h-9"></button>
             </div>
           </div>
         </div>
       </section>
       <section class="w-3/5 pr-10 pl-10">
         <div class="bg-gray-400 overflow-hidden  blocks">
-          <div class="bg-yellow-300 text-lg font-medium p-5">{{ info.detail.title }} ( {{ info.detail.year }} )</div>
+          <div class="bg-yellow-300 text-lg font-medium p-5">{{ title }} ( {{ info.detail.year }} )</div>
           <div class="bg-gray-300 mt-5 h-max text-justify p-2">{{ synopsis }}</div>
           <div class="bg-gray-300 mt-5 h-max text-justify overflow-hidden">
             <table>
@@ -42,8 +42,10 @@ export default {
     return {
       limit:0,
       film:{},
+      likes:[],
+      eyes:[],
       info: {
-        detail:{
+        detail: {
           title:'',
           year:'',
           synopsis:'',
@@ -51,22 +53,27 @@ export default {
           rating:'',
           netflix_id:'',
           large_image:'',
+          default_image:'',
           alt_runtime:'',
         },
-        genreList:[
+        genreList: [
           {
             genre:'',
             genre_id:0
           }
         ],
-        people:[
+        people: [
           {
             netflix_id:0,
             full_name:'',
             person_type:'',
             title:'',
           }
-        ]
+        ],
+        infoBase: {
+          like:'/src/assets/like.png', 
+          eye:'/src/assets/eye.png'
+        }
       },
       options:{
         method: 'GET',
@@ -79,8 +86,11 @@ export default {
   },
   mounted() {
     this.film.netflix_id=this.$route.params.netflix_id
+    
     if(JSON.parse(localStorage.getItem('info'))){
       this.info=JSON.parse(localStorage.getItem('info'))
+      this.info.infoBase.like="/src/assets/like.png"
+      this.info.infoBase.eye="/src/assets/eye.png"
     }
     if(JSON.parse(localStorage.getItem('limit'))){
       this.limit=JSON.parse(localStorage.getItem('limit'))
@@ -89,32 +99,46 @@ export default {
       if(this.limit<=80){
         this.SET_INFO()
       }
-    } else {
-      if(this.film.netflix_id!=this.info.detail.netflix_id){
-        if(this.limit<=80){
-          this.SET_INFO()
-          console.log(this.film.netflix_id +" - film")
-        }
+    } else if(this.film.netflix_id!=this.info.detail.netflix_id){
+      if(this.limit<=80){
+        this.SET_INFO()
+        console.log(this.film.netflix_id +" - film")
+      }
+    }
+    if(JSON.parse(localStorage.getItem('likes'))){
+      this.likes=JSON.parse(localStorage.getItem('likes'))
+      if(this.likes.some(obj=>obj.netflix_id==this.film.netflix_id)){
+        console.log("/src/assets/like-full.png");
+        this.info.infoBase.like="/src/assets/like-full.png"
+      }
+    }
+    if(JSON.parse(localStorage.getItem('eyes'))){
+      this.eyes=JSON.parse(localStorage.getItem('eyes'))
+      if(this.eyes.some(obj=>obj.netflix_id==this.film.netflix_id)){
+        this.info.infoBase.eye="/src/assets/eye-full.png"
       }
     }
   },
   methods: {
     SET_INFO(){
+      this.info.infoBase.like="/src/assets/like.png"
+      this.info.infoBase.eye="/src/assets/eye.png"
       this.limit++
-      fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/genres?netflix_id=${this.film.netflix_id}`, this.options)
-        .then(response => response.json())
-        .then(response => {
-          this.info.genreList = response.results
-          console.log(response.results)
-        })
-        .catch(err => console.error(err));
-      setTimeout(()=>{fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/details?netflix_id=${this.film.netflix_id}`, this.options)
+      fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/details?netflix_id=${this.film.netflix_id}`, this.options)
         .then(response => response.json())
         .then(response => {
           this.info.detail = response
           console.log(response)
         })
-        .catch(err => console.error(err))},1000)
+        .catch(err => console.error(err))
+      
+      setTimeout(()=>{fetch(`https://unogs-unogs-v1.p.rapidapi.com/title/genres?netflix_id=${this.film.netflix_id}`, this.options)
+        .then(response => response.json())
+        .then(response => {
+          this.info.genreList = response.results
+          console.log(response.results)
+        })
+        .catch(err => console.error(err));},1000)
         this.limit++
         this.limit++
       setTimeout(()=>{fetch(`https://unogs-unogs-v1.p.rapidapi.com/search/people?netflix_id=${this.film.netflix_id}`, this.options)
@@ -140,17 +164,40 @@ export default {
           return elem.full_name
         }
       }).filter(elem=>elem!=undefined).join(', ')
+    },
+    addToArray(array,property,nameInLocalStorage,wayTrue,wayFalse){
+      if(!array.some(film=>film.netflix_id == this.info.detail.netflix_id)){
+        array.push({"img":this.info.detail.large_image ? this.info.detail.large_image : this.info.detail.default_image, "title":this.title, "netflix_id":this.info.detail.netflix_id})
+        this.info.infoBase[property]=wayTrue
+      } else if(array.findIndex(film => film.netflix_id == this.info.detail.netflix_id)!=-1){
+        array.splice(array.findIndex(film => film.netflix_id == this.info.detail.netflix_id),1)
+        this.info.infoBase[property]=wayFalse
+      }
+      console.log(array);
+      localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
+    },
+    addLike(){
+      this.addToArray(this.likes,"like","likes","/src/assets/like-full.png","/src/assets/like.png")
+    },
+    addEye(){
+      this.addToArray(this.eyes,"eye","eyes","/src/assets/eye-full.png","/src/assets/eye.png")
+    },
+    deleteSymbols(obj,oldSymbol,updateSymbol){
+      if(obj){
+        while(obj.search(oldSymbol)!=-1){
+          console.log(obj);
+          obj = obj.replace(oldSymbol,updateSymbol)
+        }
+      }
+      return obj
     }
   },
   computed:{
     synopsis(){
-      if (this.info.detail.synopsis){
-        while(this.info.detail.synopsis.search("&#39;")!=-1){
-          console.log(this.info.detail.synopsis);
-          this.info.detail.synopsis=this.info.detail.synopsis.replace('&#39;',"'")
-        }
-      }
-      return this.info.detail.synopsis
+      return this.deleteSymbols(this.info.detail.synopsis,'&#39;',"'")
+    },
+    title(){
+      return this.deleteSymbols(this.info.detail.title,'&#39;',"'")
     },
     runtime(){
       let hour

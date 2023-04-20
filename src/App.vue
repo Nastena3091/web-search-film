@@ -29,8 +29,8 @@ export default({
       <ul class="list-none flex justify-center items-center">
           <li class="divider"><router-link to="/main"><img src="/src/assets/home.png"></router-link><router-link :to="{name:'main'}">ГОЛОВНА</router-link></li>
           <li class="divider"><router-link to="/settings"><img src="/src/assets/setting.png"></router-link><router-link to="/settings">НАЛАШТУВАННЯ</router-link></li>
-          <li class="divider"><router-link to=""><img src="/src/assets/like.png"></router-link><router-link to="">УЛЮБЛЕНІ</router-link></li>
-          <li><router-link to=""><img src="/src/assets/eye.png"></router-link><router-link to="">ПЕРЕГЛЯНУТІ</router-link></li>
+          <li class="divider"><router-link to="/data/like"><img src="/src/assets/like.png"></router-link><router-link to="/data/like">УЛЮБЛЕНІ</router-link></li>
+          <li><router-link to="/data/eye"><img src="/src/assets/eye.png"></router-link><router-link to="/data/eye">ПЕРЕГЛЯНУТІ</router-link></li>
       </ul>
     </nav>
     <main class="w-4/5 mt-5 mb-4 mr-auto ml-auto rounded-3xl bg-gray-400/60 pt-2 pb-2">

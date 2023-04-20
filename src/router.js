@@ -9,7 +9,7 @@ export default createRouter({
     routes:[
         { path: '/main', name:'main', component: Main, alias: '/'},
         { path: '/details/:netflix_id', name:'details', component: Details},
-        { path: '/data', name:'data', component: Like},
+        { path: '/data/:data_base', name:'data', component: Like},
         { path: '/settings', name:'settings', component: Settings}
     ]
 })

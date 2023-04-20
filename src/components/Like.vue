@@ -1,13 +1,14 @@
 <template>
   <main>
-    <div class="flex flex-wrap"><div class="section">
-            <img src="/src/assets/poster.png" alt="" class="w-full">
-            <div class="flex">
-                <div class="w-full diva">
-                    <p>НАЗВА</p>
+    <div class="flex flex-wrap">
+        <div class="section" v-for="a in array" :key="a.netflix_id">
+            <img :src="a.img" alt="" class="w-full" @click="$router.push({name: 'details', params:{netflix_id: a.netflix_id} })">
+            <div class="flex h-10">
+                <div class="text-container w-full diva  overflow-hidden whitespace-pre" @click="$router.push({name: 'details', params:{netflix_id: a.netflix_id} })">
+                    <p class="text truncate" :title="a.title">{{ a.title }}</p>
                 </div>
-                <div class="w-16 relative bord diva">
-                    <img src="../assets/like.png" alt="" class="w-10 h-10 blocks">
+                <div class="w-16 relative bord diva" @click="removeInArray(a)">
+                    <img :src="'/src/assets/'+type+'-full.png'" alt="" class="w-10 h-10 blocks">
                 </div>
             </div> 
         </div>
@@ -19,11 +20,35 @@
 export default {
     data(){
         return{
-        
+            type:'',
+            array:[],
+            button:'',
         }
     },
-    mounted(){},
-    methods:{},
+    mounted(){
+    },
+    watch: {
+        '$route.params': {
+            handler() {
+                this.type = this.$route.params.data_base;
+                if(JSON.parse(localStorage.getItem(this.type+'s'))){
+                    this.array=JSON.parse(localStorage.getItem(this.type+'s'))
+                    console.log(this.array);
+                }
+            },
+            immediate: true
+        }
+    },
+    methods:{
+        removeInArrayWithParams(array,nameInLocalStorage,index){
+            array.splice(index, 1);
+            console.log(array);
+            localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
+        },
+        removeInArray(obj){
+            this.removeInArrayWithParams(this.array,this.type+'s',this.array.indexOf(obj))
+        },
+    },
 }
 </script>
 
@@ -33,15 +58,18 @@ export default {
     @apply rounded-3xl overflow-hidden m-2 bg-gray-300
 }
 p{
-    @apply p-3 text-xl font-medium contrast-100
+    @apply font-medium py-2 px-4
 }
-p:hover{
+
+.text-container .text:hover {
+  cursor: pointer;
 }
+
 section {
-  @apply w-max flex ;
+    @apply w-max flex;
 }
 img{
-    @apply contrast-100
+    @apply contrast-100;
 }
 .bord{
     border-left: 1px solid rgb(156, 163, 175);

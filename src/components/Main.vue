@@ -5,7 +5,7 @@ export default({
     return{
       limit:0,
       films:[],
-      film:[{like:'/src/assets/like.png'},{img:'/src/assets/gray.jpg' , netflix_id:0,like:'/src/assets/like.png', eye:'/src/assets/eye.png'},{img:'/src/assets/gray.jpg'}],
+      film:[{like:'/src/assets/like.png'},{img:'/src/assets/gray.jpg' , netflix_id:0, like:'/src/assets/like.png', eye:'/src/assets/eye.png'},{img:'/src/assets/gray.jpg'}],
       likes:[],
       eyes:[],
       randomNumber: 0,
@@ -25,8 +25,21 @@ export default({
     if(this.limit<=80){
       this.SET_FILMS()
     }
+    if(JSON.parse(localStorage.getItem('likes'))){
+      this.likes=JSON.parse(localStorage.getItem('likes'))
+    }
+    if(JSON.parse(localStorage.getItem('eyes'))){
+      this.eyes=JSON.parse(localStorage.getItem('eyes'))
+    }
     if (JSON.parse(localStorage.getItem('Film'))){
       this.film[1]=JSON.parse(localStorage.getItem('Film'))
+      if(this.eyes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
+        this.film[1].eye="/src/assets/eye-full.png"
+      }
+      if(this.likes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
+        console.log("/src/assets/like-full.png");
+        this.film[1].like="/src/assets/like-full.png"
+      }
     }
     if(JSON.parse(localStorage.getItem('LastFilm'))){
       this.film[2]=JSON.parse(localStorage.getItem('LastFilm'))
@@ -38,12 +51,7 @@ export default({
         localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
     }else if(this.film[1].img!='/src/assets/gray.jpg'){}
-    if(JSON.parse(localStorage.getItem('likes'))){
-      this.likes=JSON.parse(localStorage.getItem('likes'))
-    }
-    if(JSON.parse(localStorage.getItem('eyes'))){
-      this.eyes=JSON.parse(localStorage.getItem('eyes'))
-    }
+    
   },
   methods:{
      getMovie(){
@@ -115,11 +123,13 @@ export default({
     },
     addToArray(array,property,nameInLocalStorage,wayTrue,wayFalse){
       if(!array.some(film=>film.netflix_id == this.film[1].netflix_id)){
-        array.push({"img":this.film[1].img, "title":this.film[1].title, "netflix_id":this.film[1].netflix_id})
+        array.push({"img":this.film[1].img, "title":this.title, "netflix_id":this.film[1].netflix_id})
         this.film[1][property]=wayTrue
-      } else if(array.findIndex(film => film.netflix_id === this.film[1].netflix_id)!==-1){
-        array.splice(array.findIndex(film => film.netflix_id === this.film[1].netflix_id),1)
+        console.log("add");
+      } else if(array.findIndex(film => film.netflix_id == this.film[1].netflix_id)!=-1){
+        array.splice(array.findIndex(film => film.netflix_id == this.film[1].netflix_id),1)
         this.film[1][property]=wayFalse
+        console.log('delete');
       }
       console.log(array);
       localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
@@ -165,7 +175,7 @@ export default({
       </section>
       <section>
         <div class="section blocks bg-gray-400 overflow-hidden">
-          <div class="bg-yellow-300 text-lg font-medium p-5">{{ film[1].title }}</div>
+          <div class="bg-yellow-300 text-lg font-medium p-5">{{ title }}</div>
           <div class="bg-gray-300 mt-5 h-full p-2 text-justify">{{ synopsis }}</div>
         </div>
         
