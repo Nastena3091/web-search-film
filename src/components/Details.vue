@@ -6,10 +6,10 @@
         <div class="container mr-auto ml-auto h-16">
           <div class="flex">
             <div>
-              <button class="small-button blocks button" @click="addLike"><img :src="info.infoBase.like" alt="" class="w-9 h-9"></button>
+              <button class="small-button blocks button" @click="addToArray(likes,'like')"><img :src="info.infoBase.like" alt="" class="w-9 h-9"></button>
             </div>
             <div>
-              <button class="small-button blocks button" @click="addEye"><img :src="info.infoBase.eye"  alt="" class="w-9 h-9"></button>
+              <button class="small-button blocks button" @click="addToArray(eyes,'eye')"><img :src="info.infoBase.eye"  alt="" class="w-9 h-9"></button>
             </div>
           </div>
         </div>
@@ -165,22 +165,16 @@ export default {
         }
       }).filter(elem=>elem!=undefined).join(', ')
     },
-    addToArray(array,property,nameInLocalStorage,wayTrue,wayFalse){
+    addToArray(array,property){
       if(!array.some(film=>film.netflix_id == this.info.detail.netflix_id)){
         array.push({"img":this.info.detail.large_image ? this.info.detail.large_image : this.info.detail.default_image, "title":this.title, "netflix_id":this.info.detail.netflix_id})
-        this.info.infoBase[property]=wayTrue
+        this.info.infoBase[property]="/src/assets/"+property+"-full.png"
       } else if(array.findIndex(film => film.netflix_id == this.info.detail.netflix_id)!=-1){
         array.splice(array.findIndex(film => film.netflix_id == this.info.detail.netflix_id),1)
-        this.info.infoBase[property]=wayFalse
+        this.info.infoBase[property]="/src/assets/"+property+".png"
       }
       console.log(array);
-      localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
-    },
-    addLike(){
-      this.addToArray(this.likes,"like","likes","/src/assets/like-full.png","/src/assets/like.png")
-    },
-    addEye(){
-      this.addToArray(this.eyes,"eye","eyes","/src/assets/eye-full.png","/src/assets/eye.png")
+      localStorage.setItem(property+'s', JSON.stringify(array))
     },
     deleteSymbols(obj,oldSymbol,updateSymbol){
       if(obj){

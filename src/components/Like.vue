@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main v-if="array.length!=0">
     <div class="flex flex-wrap">
         <div class="section" v-for="a in array" :key="a.netflix_id">
             <img :src="a.img" alt="" class="w-full" @click="$router.push({name: 'details', params:{netflix_id: a.netflix_id} })">
@@ -13,6 +13,9 @@
             </div> 
         </div>
     </div>
+  </main>
+  <main v-else>
+    <p class="text-9xl text-white">ВАШ СПИСОК ПОРОЖНІЙ</p>
   </main>
 </template>
 
@@ -33,7 +36,6 @@ export default {
                 this.type = this.$route.params.data_base;
                 if(JSON.parse(localStorage.getItem(this.type+'s'))){
                     this.array=JSON.parse(localStorage.getItem(this.type+'s'))
-                    console.log(this.array);
                 }
             },
             immediate: true

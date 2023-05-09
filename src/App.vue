@@ -27,10 +27,10 @@ export default({
   <div>
     <nav class="max-w-max bg-yellow-300 rounded-b-3xl ml-auto mr-auto flex justify-center items-center overflow-hidden">
       <ul class="list-none flex justify-center items-center">
-          <li class="divider"><router-link to="/main"><img src="/src/assets/home.png"></router-link><router-link :to="{name:'main'}">ГОЛОВНА</router-link></li>
-          <li class="divider"><router-link to="/settings"><img src="/src/assets/setting.png"></router-link><router-link to="/settings">НАЛАШТУВАННЯ</router-link></li>
-          <li class="divider"><router-link to="/data/like"><img src="/src/assets/like.png"></router-link><router-link to="/data/like">УЛЮБЛЕНІ</router-link></li>
-          <li><router-link to="/data/eye"><img src="/src/assets/eye.png"></router-link><router-link to="/data/eye">ПЕРЕГЛЯНУТІ</router-link></li>
+          <li class="divider" @click="$router.push({name: 'main'})"><img src="/src/assets/home.png"><span>ГОЛОВНА</span></li>
+          <li class="divider" @click="$router.push({name: 'settings'})"><img src="/src/assets/setting.png"><span>НАЛАШТУВАННЯ</span></li>
+          <li class="divider" @click="$router.push({name: 'data', params:{data_base: 'like'} })"><img src="/src/assets/like.png"><span>УЛЮБЛЕНІ</span></li>
+          <li @click="$router.push({name: 'data', params:{data_base: 'eye'} })"><img src="/src/assets/eye.png"><span>ПЕРЕГЛЯНУТІ</span></li>
       </ul>
     </nav>
     <main class="w-4/5 mt-5 mb-4 mr-auto ml-auto rounded-3xl bg-gray-400/60 pt-2 pb-2">
@@ -46,8 +46,8 @@ nav li {
     @apply p-2 pl-5 pr-5 flex items-center min-w-max contrast-50 transition-all;
 }
 
-nav a {
-    @apply flex flex-col items-center text-base;
+nav li span{
+  @apply px-1
 }
 nav li:hover{
   @apply contrast-100 bg-yellow-200

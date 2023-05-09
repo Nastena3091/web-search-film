@@ -1,5 +1,6 @@
 <script>
-
+import { mapActions, mapGetters } from 'vuex'
+import store from '../store'
 export default({
   data(){
     return{
@@ -35,14 +36,29 @@ export default({
       this.film[1]=JSON.parse(localStorage.getItem('Film'))
       if(this.eyes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
         this.film[1].eye="/src/assets/eye-full.png"
+      } else {
+        this.film[1].eye="/src/assets/eye.png"
       }
       if(this.likes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
         console.log("/src/assets/like-full.png");
         this.film[1].like="/src/assets/like-full.png"
+      } else {
+        this.film[1].like="/src/assets/like.png"
       }
     }
     if(JSON.parse(localStorage.getItem('LastFilm'))){
       this.film[2]=JSON.parse(localStorage.getItem('LastFilm'))
+      if(this.eyes.some(obj=>obj.netflix_id==this.film[2].netflix_id)){
+        this.film[2].eye="/src/assets/eye-full.png"
+      } else {
+        this.film[2].eye="/src/assets/eye.png"
+      }
+      if(this.likes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
+        console.log("/src/assets/like-full.png");
+        this.film[2].like="/src/assets/like-full.png"
+      } else {
+        this.film[2].like="/src/assets/like.png"
+      }
     }
     if(this.film[1].img=='/src/assets/gray.jpg'){
       if(this.films.length>0){
@@ -54,25 +70,25 @@ export default({
     
   },
   methods:{
+    ...mapActions(['GET_FILMS_FROM_API']),
      getMovie(){
       let arraySorted=[]
-      if(this.films.length>0){
-        arraySorted=this.films.filter(objSorted=>!this.likes.some(objLiked=>objLiked.netflix_id==objSorted.netflix_id)&&!this.eyes.some(objEyed=>objEyed.netflix_id==objSorted.netflix_id))
-        this.films=arraySorted
-        console.log(this.films)
-        this.randomNumber=Math.floor(Math.random()*this.films.length)
+      if(this.getFilms.length>0){
+        arraySorted=this.getFilms.filter(objSorted=>!this.likes.some(objLiked=>objLiked.netflix_id==objSorted.netflix_id)&&!this.eyes.some(objEyed=>objEyed.netflix_id==objSorted.netflix_id))
+        store.commit('SET_FILMS_TO_STATE',arraySorted)
+        this.randomNumber=Math.floor(Math.random()*this.getFilms.length)
         if(!this.film[1]){
-          this.film[1]=this.films[this.randomNumber]
+          this.film[1]=this.getFilms[this.randomNumber]
           this.film[1].eye='/src/assets/eye.png'
           this.film[1].like="/src/assets/like.png"
           localStorage.setItem('Film', JSON.stringify(this.film[1]))
         }else{
-          this.film[0]=this.films[this.randomNumber];
+          this.film[0]=this.getFilms[this.randomNumber];
           this.film[0].like="/src/assets/like.png"
           this.film[0].eye='/src/assets/eye.png'
           localStorage.setItem('Film', JSON.stringify(this.film[0]))
           this.film[2]=this.film[1]
-          if (this.films[2]){
+          if (this.film[2]){
             localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
           }
           this.film[1]=this.film[0]
@@ -103,13 +119,7 @@ export default({
       console.log(this.limit)
       console.log(obj);
       localStorage.setItem('limit', this.limit)
-      fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?'+obj, this.options)
-      .then(response => response.json())
-      .then(response => {
-          console.log(response)
-          this.films=response.results;
-      })
-      .catch(err => console.error(err));
+      this.GET_FILMS_FROM_API(obj)
     },
     getLastMovie(){
       if(this.film[2].img!='/src/assets/gray.jpg'){
@@ -121,24 +131,15 @@ export default({
         localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
     },
-    addToArray(array,property,nameInLocalStorage,wayTrue,wayFalse){
+    addToArray(array,property){
       if(!array.some(film=>film.netflix_id == this.film[1].netflix_id)){
         array.push({"img":this.film[1].img, "title":this.title, "netflix_id":this.film[1].netflix_id})
-        this.film[1][property]=wayTrue
-        console.log("add");
+        this.film[1][property]="/src/assets/"+property+"-full.png"
       } else if(array.findIndex(film => film.netflix_id == this.film[1].netflix_id)!=-1){
         array.splice(array.findIndex(film => film.netflix_id == this.film[1].netflix_id),1)
-        this.film[1][property]=wayFalse
-        console.log('delete');
+        this.film[1][property]="/src/assets/"+property+".png"
       }
-      console.log(array);
-      localStorage.setItem(nameInLocalStorage, JSON.stringify(array))
-    },
-    addLike(){
-      this.addToArray(this.likes,"like","likes","/src/assets/like-full.png","/src/assets/like.png")
-    },
-    addEye(){
-      this.addToArray(this.eyes,"eye","eyes","/src/assets/eye-full.png","/src/assets/eye.png")
+      localStorage.setItem(property+'s', JSON.stringify(array))
     },
     deleteSymbols(obj,oldSymbol,updateSymbol){
       if(obj){
@@ -151,6 +152,7 @@ export default({
     }
   },
   computed:{
+    ...mapGetters(['getFilms']),
     synopsis(){
       return this.deleteSymbols(this.film[1].synopsis,'&#39;',"'")
     },
@@ -187,10 +189,10 @@ export default({
         </section>
       <div class="flex">
         <div>
-          <button class="small-button blocks button" @click="addLike"><img :src="film[1].like" alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
+          <button class="small-button blocks button" @click="addToArray(likes,'like')"><img :src="film[1].like" alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
         <div>
-          <button class="small-button blocks button" @click="addEye"><img :src="film[1].eye"  alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
+          <button class="small-button blocks button" @click="addToArray(eyes,'eye')"><img :src="film[1].eye"  alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
       </div>
       <section>
@@ -198,7 +200,7 @@ export default({
       </section>
     </div>
     <div class="container mr-auto ml-auto">
-      <button class="main-button" @click="getMovie" :disabled="films.length==0">ГЕНЕРУВАТИ</button>
+      <button class="main-button" @click="getMovie" :disabled="!getFilms">ГЕНЕРУВАТИ</button>
     </div>
   </main>
 </template>
