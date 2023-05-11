@@ -9,14 +9,7 @@ export default({
       film:[{like:'/src/assets/like.png'},{img:'/src/assets/gray.jpg' , netflix_id:0, like:'/src/assets/like.png', eye:'/src/assets/eye.png'},{img:'/src/assets/gray.jpg'}],
       likes:[],
       eyes:[],
-      randomNumber: 0,
-      options:{
-        method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': 'c50076e3c3msh3189de4fc39be4fp121294jsn9bcaafdc0139',
-          'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
-        }
-      }
+      randomNumber: 0
     }
   },
   mounted(){
@@ -200,7 +193,7 @@ export default({
       </section>
     </div>
     <div class="container mr-auto ml-auto">
-      <button class="main-button" @click="getMovie" :disabled="!getFilms">ГЕНЕРУВАТИ</button>
+      <button class="main-button" @click="getMovie" :disabled="getFilms.length==0">ГЕНЕРУВАТИ</button>
     </div>
   </main>
 </template>
