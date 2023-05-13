@@ -119,7 +119,7 @@ export default {
 </script>
 
 <template>
-  <main class="flex justify-between">
+  <main class=" justify-between">
     <section>
       <div class="container">
         <div class="hat">Сортування за</div>
@@ -169,7 +169,7 @@ export default {
         </div>
       </div>
     </section>
-    <section >
+    <section>
       <div class="container">
         <div class="hat">Жанр</div>
         <div class="max-h-52 overflow-auto">
@@ -198,15 +198,18 @@ export default {
 </template>
 
 <style scoped>
-
+main{
+  display: flex;
+  
+}
 .container{
   @apply bg-gray-400 overflow-hidden rounded-3xl mb-4;
 }
 section{
-  @apply w-full mr-8 ml-8 mt-4;
+  @apply w-full  mt-4 flex-col flex pr-8 pl-8;
 }
 .main-button {
-  @apply bg-yellow-300 p-3 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all;
+  @apply bg-yellow-300 p-3 mb-4 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all;
 }
 
 .hat{
@@ -233,36 +236,12 @@ table{
 .down{
   transform: translate(-50%, -50%) rotate(45deg);
 }
-input[type="radio"] {
-  @apply appearance-none w-6 h-6 rounded-full outline-none bg-yellow-300 mr-2 relative checked:before:block checked:before:w-4 
-  checked:before:h-4 checked:before:bg-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 
-  checked:before:-translate-x-1/2 checked:before:-translate-y-1/2 checked:before:rounded-full;
-  -webkit-appearance: none;
-}
-
-
-input[type="checkbox"] {
-  @apply appearance-none w-6 h-6 rounded-md outline-none bg-yellow-300 mr-2 relative checked:before:block checked:before:w-4 
-  checked:before:h-4 checked:before:bg-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 
-  checked:before:-translate-x-1/2 checked:before:-translate-y-1/2 checked:before:rounded-md;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgb(209 213 219);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(135, 136, 140);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(107 114 128 );;
-  border-radius: 10px;
+@media (max-width: 992px){
+  main{
+    flex-direction: column;
+  }
+  section{
+    flex-direction: column-reverse;
+  }
 }
 </style>

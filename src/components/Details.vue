@@ -37,6 +37,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import store from '../store'
 export default {
   data() {
     return {
@@ -50,7 +51,7 @@ export default {
     this.film.netflix_id=this.$route.params.netflix_id
     
     if(JSON.parse(localStorage.getItem('info'))){
-      this.getInfo=JSON.parse(localStorage.getItem('info'))
+      store.commit('SET_DETAILS_TO_STATE',JSON.parse(localStorage.getItem('info')))
     }
     if(JSON.parse(localStorage.getItem('limit'))){
       this.limit=JSON.parse(localStorage.getItem('limit'))
@@ -92,21 +93,23 @@ export default {
     },
     GET_PEOPLE(people){
       let a=''
-      return this.getInfo.people.map(elem=>{
+      return this.deleteSymbols(this.getInfo.people.map(elem=>{
         if (elem.person_type==people && a!=elem.full_name){
           a=elem.full_name
           return elem.full_name
         }
-      }).filter(elem=>elem!=undefined).join(', ')
+      }).filter(elem=>elem!=undefined).join(', '),'&#39;',"'")
     },
     addToArray(array,property){
+      let arrayWithEditInfoBase=this.getInfo
       if(!array.some(film=>film.netflix_id == this.getInfo.detail.netflix_id)){
         array.push({"img":this.getInfo.detail.large_image ? this.getInfo.detail.large_image : this.getInfo.detail.default_image, "title":this.title, "netflix_id":this.getInfo.detail.netflix_id})
-        this.getInfo.infoBase[property]="/src/assets/"+property+"-full.png"
+        arrayWithEditInfoBase.infoBase[property]="/src/assets/"+property+"-full.png"
       } else if(array.findIndex(film => film.netflix_id == this.getInfo.detail.netflix_id)!=-1){
         array.splice(array.findIndex(film => film.netflix_id == this.getInfo.detail.netflix_id),1)
-        this.getInfo.infoBase[property]="/src/assets/"+property+".png"
+        arrayWithEditInfoBase.infoBase[property]="/src/assets/"+property+".png"
       }
+      store.commit('SET_DETAILS_TO_STATE',arrayWithEditInfoBase)
       console.log(array);
       localStorage.setItem(property+'s', JSON.stringify(array))
     },
@@ -160,7 +163,7 @@ export default {
 
 <style scoped>
 div{
-  @apply w-full relative;
+  @apply w-full ;
 }
 section {
   @apply w-full text-center flex-col justify-center items-center;
@@ -172,7 +175,7 @@ img {
   @apply flex justify-center w-full
 }
 .blocks{
-  @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-3xl;
+  @apply rounded-3xl;
 }
 section div {
   @apply rounded-3xl;
@@ -184,7 +187,7 @@ section div {
   @apply bg-gray-200 contrast-100 transition-all 
 }
 .small-button{
-  @apply max-w-max p-2 absolute;
+  @apply max-w-max p-2 ;
 }
 td{
   border: 1px solid rgb(156, 163, 175);

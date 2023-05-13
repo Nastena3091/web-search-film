@@ -3,7 +3,37 @@ import { createStore } from "vuex";
 const store = createStore({
     state:{
         films:[],
-        info:[],
+        info: {
+            detail: {
+              title:'',
+              year:'',
+              synopsis:'',
+              runtime:'',
+              rating:'',
+              netflix_id:'',
+              large_image:'',
+              default_image:'',
+              alt_runtime:'',
+            },
+            genreList: [
+              {
+                genre:'',
+                genre_id:0
+              }
+            ],
+            people: [
+              {
+                netflix_id:0,
+                full_name:'',
+                person_type:'',
+                title:'',
+              }
+            ],
+            infoBase: {
+              like:'/src/assets/like.png', 
+              eye:'/src/assets/eye.png'
+            }
+          },
         options:{
             method: 'GET',
             headers: {

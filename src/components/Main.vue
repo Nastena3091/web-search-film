@@ -17,7 +17,7 @@ export default({
       this.limit=JSON.parse(localStorage.getItem('limit'))
     }
     if(this.limit<=80){
-      this.SET_FILMS()
+      // this.SET_FILMS()
     }
     if(JSON.parse(localStorage.getItem('likes'))){
       this.likes=JSON.parse(localStorage.getItem('likes'))
@@ -46,7 +46,7 @@ export default({
       } else {
         this.film[2].eye="/src/assets/eye.png"
       }
-      if(this.likes.some(obj=>obj.netflix_id==this.film[1].netflix_id)){
+      if(this.likes.some(obj=>obj.netflix_id==this.film[2].netflix_id)){
         console.log("/src/assets/like-full.png");
         this.film[2].like="/src/assets/like-full.png"
       } else {
@@ -120,6 +120,7 @@ export default({
         this.film[1]=this.film[2]
         this.film[2]=this.film[0]
         this.film[0]={}
+        store.commit('SET_FILMS_TO_STATE',this.film[1])
         localStorage.setItem('LastFilm', JSON.stringify(this.film[2]))
         localStorage.setItem('Film', JSON.stringify(this.film[1]))
       }
@@ -158,33 +159,31 @@ export default({
 
 
 <template>
-
-
-  <main class="flex-col">
-    <div class="container top mr-auto ml-auto">
-      <section>
-        <img :src="film[2].img" alt="" class="section blocks" v-show="film[2].img!='/src/assets/gray.jpg'">
+  <main>
+    <div class="container">
+      <section class="block-to-hide">
+        <img :src="film[2].img" alt="" class="section blocks " v-show="film[2].img!='/src/assets/gray.jpg'">
       </section>
       <section>
-        <img :src="film[1].img" alt="" style="min-width: 300px; width: 300px; height: 450px;" class="blocks">
+        <img :src="film[1].img" alt="" class="section-big blocks ">
       </section>
       <section>
         <div class="section blocks bg-gray-400 overflow-hidden">
-          <div class="bg-yellow-300 text-lg font-medium p-5">{{ title }}</div>
-          <div class="bg-gray-300 mt-5 h-full p-2 text-justify">{{ synopsis }}</div>
+          <div class="bg-yellow-300 font-medium p-5 title">{{ title }}</div>
+          <div class="bg-gray-300 mt-5 h-full p-2 text-justify text">{{ synopsis }}</div>
         </div>
-        
       </section>
     </div>
-    <div class="container bottom mr-auto ml-auto">
-      <section> 
+    <div class="container">
+      <section class="block-to-hide"> 
         <button class="p-1 w-40 blocks button" @click="getLastMovie" v-show="film[2].img!='/src/assets/gray.jpg'">Попереднє</button>
         </section>
       <div class="flex">
-        <div>
+        <div class="flex p-4">
           <button class="small-button blocks button" @click="addToArray(likes,'like')"><img :src="film[1].like" alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
-        <div>
+        
+        <div class="flex p-4">
           <button class="small-button blocks button" @click="addToArray(eyes,'eye')"><img :src="film[1].eye"  alt="" class="w-9 h-9" v-show="film[1].img!='/src/assets/gray.jpg'"></button>
         </div>
       </div>
@@ -192,51 +191,86 @@ export default({
         <router-link :to="{name: 'details', params:{netflix_id: film[1].netflix_id} }"><button class="p-1 w-40 blocks button" v-show="film[1].img!='/src/assets/gray.jpg'">Детальніше</button></router-link>
       </section>
     </div>
-    <div class="container mr-auto ml-auto">
-      <button class="main-button" @click="getMovie" :disabled="getFilms.length==0">ГЕНЕРУВАТИ</button>
+    <div class="flex">
+      <button class="main-button mr-auto ml-auto" @click="getMovie" :disabled="getFilms.length==0">ГЕНЕРУВАТИ</button>
     </div>
   </main>
 </template>
 
 <style scoped>
+
 div{
-  @apply w-full relative;
+  @apply w-full ;
 }
 section {
-  @apply w-full relative text-center flex-col justify-center items-center;
+  @apply w-full text-center justify-center items-center;
+  padding: 15px;
 }
 img {
   @apply self-center
 }
 .section{
-  width:250px; 
-  height: 375px;
+  width: 20em;
+  height:27.5em;
+}
+.section-big{
+  width: 22.5em;
+  height: 30em;
 }
 .container{
-  @apply flex justify-center w-full
+  @apply flex mr-auto ml-auto
 }
-.top{
-  height: 480px;
-}
-.bottom{
-  height: 60px;
-}
+
 .blocks{
-  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-3xl;
+  @apply rounded-3xl ml-auto mr-auto;
 }
 section div {
   @apply rounded-3xl;
+}
+.title{
+  font-size:large
 }
 .main-button {
   @apply bg-yellow-300 p-3 font-medium rounded-full text-xl mt-5 hover:bg-yellow-200 hover:transition-all disabled:bg-yellow-100 disabled:text-gray-300;
 }
 .button {
-  @apply bg-gray-300 rounded-3xl text-lg overflow-hidden contrast-75;
+  @apply bg-gray-300 text-lg overflow-hidden contrast-75;
 }
 .button:hover{
   @apply bg-gray-200 contrast-100 transition-all 
 }
 .small-button{
-  @apply max-w-max p-2;
+  @apply max-w-max rounded-full p-2;
+}
+@media (max-width: 1200px) {
+  .block-to-hide {
+    display: none;
+  }
+  .section{
+  width: auto;
+  height: 30em;
+  }
+  .section-big{
+    min-width: 300px;
+  }
+}
+@media (max-width:767px){
+  .container{
+    display: block;
+    
+  }
+  .section{
+    max-width: 360px;
+    height: auto;
+  }
+  .section-big{
+    min-width: auto;
+  }
+  .text{
+    font-size: 20px;
+  }
+  .title{
+    font-size:25px;
+  }
 }
 </style>

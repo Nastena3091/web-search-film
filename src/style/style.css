@@ -6,4 +6,37 @@ body{
     background:#231510 url("/src/assets/tl.webp") no-repeat center;
     background-size: cover;
 }
+*{
+    box-sizing: border-box;
+}
+input[type="radio"] {
+    @apply appearance-none w-6 h-6 rounded-full outline-none bg-yellow-300 mr-2 relative checked:before:block checked:before:w-4 
+    checked:before:h-4 checked:before:bg-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 
+    checked:before:-translate-x-1/2 checked:before:-translate-y-1/2 checked:before:rounded-full;
+    -webkit-appearance: none;
+}
+input[type="checkbox"] {
+    min-width: 24px;
+    @apply appearance-none w-6 h-6 rounded-md outline-none bg-yellow-300 mr-2 relative checked:before:block checked:before:w-4 
+    checked:before:h-4 checked:before:bg-black checked:before:absolute checked:before:top-1/2 checked:before:left-1/2 
+    checked:before:-translate-x-1/2 checked:before:-translate-y-1/2 checked:before:rounded-md;
+}
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(209 213 219);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(135, 136, 140);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128 );;
+    border-radius: 10px;
+}
