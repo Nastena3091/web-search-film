@@ -1,5 +1,5 @@
 <script>
-import country from "../data/country.js"
+import country from "../data/country"
 import genreMovie from "../data/genreMovie";
 import genreSeries from "../data/genreSeries";
 import VueSimpleRangeSlider from "vue-simple-range-slider";

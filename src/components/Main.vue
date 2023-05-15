@@ -201,7 +201,7 @@ export default {
       <section>
         <img :src="film[1].img" alt="" class="section-big blocks" />
       </section>
-      <section class="mr-5">
+      <section >
         <div class="section blocks bg-gray-400 overflow-hidden ">
           <div class="bg-yellow-300 font-medium p-5 title">{{ title }}</div>
           <div class="bg-gray-300 mt-5 h-full p-2 text-justify text">{{ synopsis }}</div>
@@ -213,7 +213,7 @@ export default {
         <button
           class="p-1 w-40 blocks button"
           @click="getLastMovie"
-          v-show="film[2].img != '/src/assets/gray.jpg'"
+          v-show="film[2].img != 'src/assets/gray.jpg'"
         >
           Попереднє
         </button>
@@ -225,7 +225,7 @@ export default {
               :src="film[1].like"
               alt=""
               class="w-9 h-9"
-              v-show="film[1].img != '/src/assets/gray.jpg'"
+              v-show="film[1].img != 'src/assets/gray.jpg'"
             />
           </button>
         </div>
@@ -236,7 +236,7 @@ export default {
               :src="film[1].eye"
               alt=""
               class="w-9 h-9"
-              v-show="film[1].img != '/src/assets/gray.jpg'"
+              v-show="film[1].img != 'src/assets/gray.jpg'"
             />
           </button>
         </div>
@@ -245,7 +245,7 @@ export default {
         <router-link :to="{ name: 'details', params: { netflix_id: film[1].netflix_id } }"
           ><button
             class="p-1 w-40 blocks button"
-            v-show="film[1].img != '/src/assets/gray.jpg'"
+            v-show="film[1].img != 'src/assets/gray.jpg'"
           >
             Детальніше
           </button></router-link
@@ -307,6 +307,9 @@ section div {
   @apply max-w-max rounded-full;
 }
 @media (max-width: 1200px) {
+  section{
+    @apply p-5;
+  }
   .block-to-hide {
     display: none;
   }
