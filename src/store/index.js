@@ -48,7 +48,10 @@ const store = createStore({
         },
         SET_DETAILS_TO_STATE:(state,info)=>{
             state.info=info
-        }
+        },
+        SET_INFOBASE_FOR_DETAILS_TO_STATE:(state,payload)=>{
+          state.info.infoBase[payload.property]=payload.info
+        },
     },
     actions:{
         GET_FILMS_FROM_API({commit,state},obj){
@@ -73,8 +76,7 @@ const store = createStore({
                 .then(responses => Promise.all(responses.map(response => response.json())))
                 .then(data => {
                 const [details, genres, people] = data;
-                const infoBase= {like:'/src/assets/like.png', eye:'/src/assets/eye.png'}
-                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase': infoBase}
+                const info={'detail':details,'genreList':genres.results,'people':people.results}
                 console.log(data);
                 commit('SET_DETAILS_TO_STATE',info)
                 console.log(state.info);

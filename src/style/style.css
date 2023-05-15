@@ -5,6 +5,11 @@
 body{
     background:#231510 url("/src/assets/tl.webp") no-repeat center;
     background-size: cover;
+    backdrop-filter: blur(10px);
+    min-height: 100%;
+}
+html{
+    height: 100%;
 }
 *{
     box-sizing: border-box;

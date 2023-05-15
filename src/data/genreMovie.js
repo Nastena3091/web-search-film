@@ -74,12 +74,14 @@ export default [
     { 
         type: "documentaries", 
         title: "Документальний", 
-        id: 6839, max: "299" 
+        id: 6839, 
+        max: "299" 
     },
     { 
         type: "fantasy", 
         title: "Фантастика", 
-        id: 9744, max: "254" 
+        id: 9744, 
+        max: "254" 
     },
     { 
         type: "festiveFavourites", 

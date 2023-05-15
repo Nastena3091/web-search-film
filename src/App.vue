@@ -13,27 +13,48 @@ export default({
   },
   data(){
     return{
-      
+      burger: "burger",
+      menu:"menu"
     }
   },
   mounted(){},
   methods: {
-    
+    toggleOpen(){
+      if (this.burger=='burger'){
+        this.burger = 'burger open'
+        this.menu = 'menu open'
+      } else{
+        this.burger = 'burger'
+        this.menu = 'menu'
+      }
+    }
 }
 })
 </script>
 
 <template>
-  <div>
-    <nav class="max-w-max bg-yellow-300 rounded-b-3xl ml-auto mr-auto flex justify-center items-center overflow-hidden">
-      <ul class="list-none flex justify-center items-center">
-          <li class="divider" @click="$router.push({name: 'main'})"><img src="/src/assets/home.png"><span>ГОЛОВНА</span></li>
-          <li class="divider" @click="$router.push({name: 'settings'})"><img src="/src/assets/setting.png"><span>НАЛАШТУВАННЯ</span></li>
-          <li class="divider" @click="$router.push({name: 'data', params:{data_base: 'like'} })"><img src="/src/assets/like.png"><span>УЛЮБЛЕНІ</span></li>
-          <li @click="$router.push({name: 'data', params:{data_base: 'eye'} })"><img src="/src/assets/eye.png"><span>ПЕРЕГЛЯНУТІ</span></li>
-      </ul>
-    </nav>
-    <main class="w-4/5 mt-5 mb-4 mr-auto ml-auto rounded-3xl bg-gray-400/60 pt-2 pb-2">
+  <div class="main">
+      <nav>
+        <ul class=" divider">
+          <li class="main_button" @click="$router.push({name: 'main'});
+          this.burger = 'burger'
+          this.menu = 'menu'"><img src="/src/assets/home.png"><span>ГОЛОВНА</span></li>
+          <li class="burger_li" @click="toggleOpen"><div :class="burger"><span></span></div></li>
+        </ul>
+        <ul :class="menu">
+          <li class="divider" @click="$router.push({name: 'settings'});
+          this.burger = 'burger'
+          this.menu = 'menu'"><img src="/src/assets/setting.png"><span>НАЛАШТУВАННЯ</span></li>
+          <li class="divider" @click="$router.push({name: 'data', params:{data_base: 'like'} });
+          this.burger = 'burger'
+          this.menu = 'menu'"><img src="/src/assets/like.png"><span>УЛЮБЛЕНІ</span></li>
+          <li @click="$router.push({name: 'data', params:{data_base: 'eye'} });
+          this.burger = 'burger'
+          this.menu = 'menu'"><img src="/src/assets/eye.png"><span>ПЕРЕГЛЯНУТІ</span></li>
+        </ul>
+      </nav>
+    
+    <main class="w-4/5 mb-4 mr-auto ml-auto rounded-3xl bg-gray-400/60 mt-4 pt-2 pb-2">
       
       <router-view></router-view>
 
@@ -43,12 +64,18 @@ export default({
 
 <style scoped>
 nav li {
-    @apply p-2 pl-5 pr-5 flex items-center min-w-max contrast-50 transition-all;
+    @apply flex items-center min-w-max contrast-50 transition-all h-12;
 }
 
-nav li span{
-  @apply px-1
+ul{
+  @apply list-none flex justify-center items-center;
+  width: 100%;
 }
+nav{
+  @apply max-w-max bg-yellow-300 rounded-b-3xl flex justify-center items-center overflow-hidden sticky mx-auto top-0 z-10;
+
+}
+
 nav li:hover{
   @apply contrast-100 bg-yellow-200
 }
@@ -56,7 +83,102 @@ nav img {
     @apply w-10 mr-1;
 }
 
-nav li.divider {
+.divider {
     border-right: 1px solid black;
+}
+.burger{
+  display:none
+}
+.burger_li{
+  @apply  flex justify-center items-center w-1/4
+}
+.menu li{
+  @apply pl-4 pr-4
+}
+.main_button{
+  @apply pl-4 pr-4
+}
+@media(max-width:767px){
+  .burger {
+    display:block;
+    position: relative;
+    width:35px;
+    height:30px;
+  }
+  .burger.open::before {
+    transform: rotate(45deg);
+    top:13px
+  }
+  .burger.open::after {
+    transform: rotate(-45deg);
+    bottom: 12px;
+  }
+  .burger.open span{
+    transform:scale(0);
+  }
+  .burger span{
+    position:absolute;
+    left: 0;
+    height: 5px;
+    width: 70%;
+    background-color: black;
+    border-radius: 5px;
+    top:13px;
+    transition: all 0.5s ease ;
+  }
+  .burger::before,
+  .burger::after{
+    content:'';
+    background-color: black;
+    position:absolute;
+    width: 100%;
+    height:5px;
+    left: 0;
+    border-radius: 5px;
+    transition: all 0.5s ease ;
+  }
+  .burger::before{
+    top:0;
+  }
+  .burger::after{
+    bottom: 0;
+  }
+  nav{
+    @apply w-3/4 flex-col max-w-none;
+    
+  }
+  .menu{
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 1s, transform 0.5s;
+}
+
+.menu.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+  .menu.open li, .main_button{
+    display: flex;
+    width: 100%;
+    height:60px;
+  }
+  .burger_li{
+    height:60px;
+    @apply border-l border-black;
+  }
+  .menu li{
+    display: none;
+    @apply w-full
+  }
+  .divider{
+    border-right: 0;
+  }
+  .menu.open li{
+    border-top: 1px solid black;
+  }
+
+
 }
 </style>
