@@ -38,19 +38,22 @@ export default({
         <ul class=" divider">
           <li class="main_button" @click="$router.push({name: 'main'});
           this.burger = 'burger'
-          this.menu = 'menu'"><img src="/src/assets/home.png"><span>ГОЛОВНА</span></li>
+          this.menu = 'menu'"><img src="/assets/home.png"><span>ГОЛОВНА</span></li>
           <li class="burger_li" @click="toggleOpen"><div :class="burger"><span></span></div></li>
         </ul>
         <ul :class="menu">
           <li class="divider" @click="$router.push({name: 'settings'});
           this.burger = 'burger'
-          this.menu = 'menu'"><img src="/src/assets/setting.png"><span>НАЛАШТУВАННЯ</span></li>
+          this.menu = 'menu'"><img src="/assets/setting.png"><span>НАЛАШТУВАННЯ</span></li>
           <li class="divider" @click="$router.push({name: 'data', params:{data_base: 'like'} });
           this.burger = 'burger'
-          this.menu = 'menu'"><img src="/src/assets/like.png"><span>УЛЮБЛЕНІ</span></li>
-          <li @click="$router.push({name: 'data', params:{data_base: 'eye'} });
+          this.menu = 'menu'"><img src="/assets/like.png"><span>УЛЮБЛЕНІ</span></li>
+          <li class="divider" @click="$router.push({name: 'data', params:{data_base: 'eye'} });
           this.burger = 'burger'
-          this.menu = 'menu'"><img src="/src/assets/eye.png"><span>ПЕРЕГЛЯНУТІ</span></li>
+          this.menu = 'menu'"><img src="/assets/eye.png"><span>ПЕРЕГЛЯНУТІ</span></li>
+          <li @click="$router.push({name: 'data', params:{data_base: 'history'} });
+          this.burger = 'burger'
+          this.menu = 'menu'"><img src="/assets/history.png"><span>ІСТОРІЯ</span></li>
         </ul>
       </nav>
     
@@ -98,7 +101,7 @@ nav img {
 .main_button{
   @apply pl-4 pr-4
 }
-@media(max-width:767px){
+@media(max-width:800px){
   .burger {
     display:block;
     position: relative;

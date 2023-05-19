@@ -30,8 +30,8 @@ const store = createStore({
               }
             ],
             infoBase: {
-              like:'/src/assets/like.png', 
-              eye:'/src/assets/eye.png'
+              like:'/assets/like.png', 
+              eye:'/assets/eye.png'
             }
           },
         options:{
@@ -40,19 +40,69 @@ const store = createStore({
               'X-RapidAPI-Key': 'c50076e3c3msh3189de4fc39be4fp121294jsn9bcaafdc0139',
               'X-RapidAPI-Host': 'unogs-unogs-v1.p.rapidapi.com'
             }
-          }
+          },
+        history:[],
     },
     mutations:{
         SET_FILMS_TO_STATE:(state, films)=>{
             state.films=films
         },
         SET_DETAILS_TO_STATE:(state,info)=>{
+          if(info){
             state.info=info
+          }else{
+            state.info={
+              detail: {
+                title:'',
+                year:'',
+                synopsis:'',
+                runtime:'',
+                rating:'',
+                netflix_id:'',
+                large_image:'',
+                default_image:'',
+                alt_runtime:'',
+              },
+              genreList: [
+                {
+                  genre:'',
+                  genre_id:0
+                }
+              ],
+              people: [
+                {
+                  netflix_id:0,
+                  full_name:'',
+                  person_type:'',
+                  title:'',
+                }
+              ],
+              infoBase: {
+                like:'/assets/like.png', 
+                eye:'/assets/eye.png'
+              }
+            }
+          }
         },
         SET_INFOBASE_FOR_DETAILS_TO_STATE:(state,payload)=>{
           state.info.infoBase[payload.property]=payload.info
         },
-    },
+        SET_FILM_TO_HISTORY:(state,film)=>{
+          state.history = state.history.filter(item => {
+            return (
+              item.netflix_id !== film.netflix_id ||
+              item.title !== film.title ||
+              item.type !== film.type ||
+              item.img !== film.img
+            );
+          });
+          state.history.unshift(film)
+          if(state.history.length>15) state.history.pop()
+        },
+        SET_FILMS_TO_HISTORY:(state,films)=>{
+          state.history=films
+        }
+      },
     actions:{
         GET_FILMS_FROM_API({commit,state},obj){
             fetch('https://unogs-unogs-v1.p.rapidapi.com/search/titles?'+obj, state.options)
@@ -76,7 +126,7 @@ const store = createStore({
                 .then(responses => Promise.all(responses.map(response => response.json())))
                 .then(data => {
                 const [details, genres, people] = data;
-                const info={'detail':details,'genreList':genres.results,'people':people.results}
+                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase':{ like:'/assets/like.png', eye:'/assets/eye.png'}}
                 console.log(data);
                 commit('SET_DETAILS_TO_STATE',info)
                 console.log(state.info);
@@ -87,7 +137,8 @@ const store = createStore({
     },
     getters:{
         getFilms: state => state.films,
-        getInfo:state => state.info
+        getInfo:state => state.info,
+        getHistory:state => state.history,
     },
 })
 export default store;

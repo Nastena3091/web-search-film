@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="container mr-auto ml-auto">
+    <div class="container mr-auto ml-auto" v-if="getInfo.detail.netflix_id">
       <section class="flex w-2/5">
         <img
           v-show="getInfo.detail.large_image || getInfo.detail.default_image"
@@ -68,6 +68,9 @@
         </div>
       </section>
     </div>
+    <div class="container mr-auto ml-auto" v-else>
+      <p class="text-6xl text-white">Проблема зі з'єднанням, можливо перевищен ліміт запитів</p>
+    </div>
   </main>
 </template>
 
@@ -91,11 +94,9 @@ export default {
     if (JSON.parse(localStorage.getItem("limit"))) {
       this.limit = JSON.parse(localStorage.getItem("limit"));
     }
-    if (!this.getInfo.detail.netflix_id) {
-      if (this.limit <= 80) {
-        this.SET_INFO();
-      }
-    } else if (this.film.netflix_id != this.getInfo.detail.netflix_id) {
+    if (this.film.netflix_id == this.getInfo.detail.netflix_id) {
+    } else{
+      this.SET_DETAILS_TO_STATE('')
       if (this.limit <= 80) {
         this.SET_INFO();
         console.log(this.film.netflix_id + " - film");
@@ -104,15 +105,15 @@ export default {
     if (JSON.parse(localStorage.getItem("likes"))) {
       this.likes = JSON.parse(localStorage.getItem("likes"));
       if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        console.log("/src/assets/like-full.png");
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:"/src/assets/like-full.png",property:"like"})
+        console.log(" /assets/like-full.png");
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/like-full.png",property:"like"})
       }
     }
     if (JSON.parse(localStorage.getItem("eyes"))) {
       this.eyes = JSON.parse(localStorage.getItem("eyes"));
       if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        console.log("/src/assets/eye-full.png");
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:"/src/assets/eye-full.png",property:"eye"})
+        console.log(" /assets/eye-full.png");
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/eye-full.png",property:"eye"})
       }
     }
   },
@@ -152,7 +153,7 @@ export default {
           netflix_id: this.getInfo.detail.netflix_id,
         });
         arrayWithEditInfoBase.infoBase[property] =
-          "/src/assets/" + property + "-full.png";
+          " /assets/" + property + "-full.png";
       } else if (
         array.findIndex((film) => film.netflix_id == this.getInfo.detail.netflix_id) != -1
       ) {
@@ -160,7 +161,7 @@ export default {
           array.findIndex((film) => film.netflix_id == this.getInfo.detail.netflix_id),
           1
         );
-        arrayWithEditInfoBase.infoBase[property] = "/src/assets/" + property + ".png";
+        arrayWithEditInfoBase.infoBase[property] = " /assets/" + property + ".png";
       }
       this.SET_DETAILS_TO_STATE(arrayWithEditInfoBase);
       console.log(array);

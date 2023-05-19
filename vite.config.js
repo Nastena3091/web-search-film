@@ -32,9 +32,10 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPattern:[
-            '**/*/{js,css,html,woff2,png,svg,ico,jpg,jpeg}'
+        globPatterns:[
+            '**/*/{js,css,woff2,png,svg,ico,jpg,jpeg,webp}'
         ],
+        navigateFallback:null,
       },
     }),
   ],
