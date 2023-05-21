@@ -36,8 +36,8 @@ export default {
                 this.type = this.$route.params.data_base;
                 if(JSON.parse(localStorage.getItem(this.type+'s'))){
                     this.array=JSON.parse(localStorage.getItem(this.type+'s'))
-                }else if(JSON.parse(localStorage.getItem('history')))
-                    this.array=JSON.parse(localStorage.getItem('history'))
+                }else if(JSON.parse(localStorage.getItem(this.type)))
+                    this.array=JSON.parse(localStorage.getItem(this.type))
             },
             immediate: true
         }
@@ -58,10 +58,10 @@ export default {
 <style scoped>
 .section{
     width: calc(1/4*100% - (1 - 1/4)*22px);
-    @apply rounded-3xl overflow-hidden m-2 bg-gray-300
+    @apply rounded-3xl overflow-hidden m-2 bg-gray-300;
 }
 p{
-    @apply font-medium py-2 px-4
+    @apply font-medium py-2 px-4;
 }
 
 .text-container .text:hover {
@@ -78,10 +78,10 @@ img{
     border-left: 1px solid rgb(156, 163, 175);
 }
 .button{
-    @apply w-1/3 min-w-min
+    @apply w-1/3 min-w-min;
 }
 div.diva:hover{
-    @apply bg-gray-200 contrast-150 transition-all
+    @apply bg-gray-200 contrast-150 transition-all;
 }
 @media(max-width: 767px){
     .section{
@@ -95,7 +95,7 @@ div.diva:hover{
 }
 @media (max-width: 400px){
     .section{
-        width: 100%
+        width: 100%;
     }
 }
 </style>

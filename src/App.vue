@@ -80,7 +80,7 @@ nav{
 }
 
 nav li:hover{
-  @apply contrast-100 bg-yellow-200
+  @apply contrast-100 bg-yellow-200;
 }
 nav img {
     @apply w-10 mr-1;
@@ -90,16 +90,16 @@ nav img {
     border-right: 1px solid black;
 }
 .burger{
-  display:none
+  display:none;
 }
 .burger_li{
-  @apply  flex justify-center items-center w-1/4
+  @apply  flex justify-center items-center w-1/4;
 }
 .menu li{
-  @apply pl-4 pr-4
+  @apply pl-4 pr-4;
 }
 .main_button{
-  @apply pl-4 pr-4
+  @apply pl-4 pr-4;
 }
 @media(max-width:800px){
   .burger {
@@ -110,7 +110,7 @@ nav img {
   }
   .burger.open::before {
     transform: rotate(45deg);
-    top:13px
+    top:13px;
   }
   .burger.open::after {
     transform: rotate(-45deg);
@@ -173,7 +173,7 @@ nav img {
   }
   .menu li{
     display: none;
-    @apply w-full
+    @apply w-full;
   }
   .divider{
     border-right: 0;

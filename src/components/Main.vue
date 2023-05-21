@@ -1,20 +1,23 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 
+
 export default {
   data() {
     return {
       limit: 0,
       films: [],
       film: [
-        { like: " /assets/like.png" },
+        {},
         {
           img: " /assets/gray.jpg",
           netflix_id: 0,
-          like: " /assets/like.png",
-          eye: " /assets/eye.png",
+          infoBase: {
+              like:'/assets/like.png', 
+              eye:'/assets/eye.png'
+            },
         },
-        { img: " /assets/gray.jpg" },
+        {img: " /assets/gray.jpg"},
       ],
       likes: [],
       eyes: [],
@@ -22,60 +25,103 @@ export default {
     };
   },
   mounted() {
-    if (JSON.parse(localStorage.getItem("limit"))) {
-      this.limit = JSON.parse(localStorage.getItem("limit"));
+    const historyFromStorage = JSON.parse(localStorage.getItem("history"));
+    const limit = JSON.parse(localStorage.getItem("limit"));
+    const likes = JSON.parse(localStorage.getItem("likes"));
+    const eyes = JSON.parse(localStorage.getItem("eyes"));
+    const filmFromStorage = JSON.parse(localStorage.getItem("Film"));
+    const lastFilmFromStorage = JSON.parse(localStorage.getItem("LastFilm"));
+    if (historyFromStorage) this.SET_FILMS_TO_HISTORY(historyFromStorage);
+    if (limit) this.limit = limit;
+    if (this.limit <= 80) this.SET_FILMS();
+    if (likes) this.likes = likes;
+    if (eyes) this.eyes = eyes;
+    
+    if (filmFromStorage) {
+      this.film[1] = filmFromStorage;
+      this.film[1].infoBase.eye = this.eyes.some((obj) => obj.netflix_id == this.film[1].netflix_id)
+        ? " /assets/eye-full.png"
+        : " /assets/eye.png";
+      this.film[1].infoBase.like = this.likes.some((obj) => obj.netflix_id == this.film[1].netflix_id)
+        ? " /assets/like-full.png"
+        : " /assets/like.png";
+      this.SET_FILM_TO_STATE(this.film[1]);
     }
-    if (this.limit <= 80) {
-      this.SET_FILMS()
+
+    if (lastFilmFromStorage) {
+      this.film[2] = lastFilmFromStorage;
+      this.film[2].infoBase.eye = this.eyes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
+        ? " /assets/eye-full.png"
+        : " /assets/eye.png";
+      this.film[2].infoBase.like = this.likes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
+        ? " /assets/like-full.png"
+        : " /assets/like.png";
     }
-    if (JSON.parse(localStorage.getItem("likes"))) {
-      this.likes = JSON.parse(localStorage.getItem("likes"));
-    }
-    if (JSON.parse(localStorage.getItem("eyes"))) {
-      this.eyes = JSON.parse(localStorage.getItem("eyes"));
-    }
-    if (JSON.parse(localStorage.getItem("Film"))) {
-      this.film[1] = JSON.parse(localStorage.getItem("Film"));
-      if (this.eyes.some((obj) => obj.netflix_id == this.film[1].netflix_id)) {
-        this.film[1].eye = " /assets/eye-full.png";
-      } else {
-        this.film[1].eye = " /assets/eye.png";
-      }
-      if (this.likes.some((obj) => obj.netflix_id == this.film[1].netflix_id)) {
-        console.log(" /assets/like-full.png");
-        this.film[1].like = " /assets/like-full.png";
-      } else {
-        this.film[1].like = " /assets/like.png";
-      }
-    }
-    if (JSON.parse(localStorage.getItem("LastFilm"))) {
-      this.film[2] = JSON.parse(localStorage.getItem("LastFilm"));
-      if (this.eyes.some((obj) => obj.netflix_id == this.film[2].netflix_id)) {
-        this.film[2].eye = " /assets/eye-full.png";
-      } else {
-        this.film[2].eye = " /assets/eye.png";
-      }
-      if (this.likes.some((obj) => obj.netflix_id == this.film[2].netflix_id)) {
-        console.log(" /assets/like-full.png");
-        this.film[2].like = " /assets/like-full.png";
-      } else {
-        this.film[2].like = " /assets/like.png";
-      }
-    }
-    if(JSON.parse(localStorage.getItem("history"))){
-      this.SET_FILMS_TO_HISTORY(JSON.parse(localStorage.getItem("history")))
-    }
-    if (this.film[1].img == " /assets/gray.jpg") {
-      if (this.films.length > 0) {
-        this.randomNumber = Math.floor(Math.random() * this.films.length);
-        this.film[1] = this.films[this.randomNumber];
-        localStorage.setItem("Film", JSON.stringify(this.film[1]));
-      }
+
+    if (this.film[1].img == " /assets/gray.jpg" && this.films.length > 0) {
+      this.randomNumber = Math.floor(Math.random() * this.films.length);
+      this.film[1] = this.films[this.randomNumber];
+      localStorage.setItem("Film", JSON.stringify(this.film[1]));
     }
   },
+
+
+  // mounted() {
+  //   if (JSON.parse(localStorage.getItem("limit"))) {
+  //     this.limit = JSON.parse(localStorage.getItem("limit"));
+  //   }
+  //   if (this.limit <= 80) {
+  //     this.SET_FILMS()
+  //   }
+  //   if (JSON.parse(localStorage.getItem("likes"))) {
+  //     this.likes = JSON.parse(localStorage.getItem("likes"));
+  //   }
+  //   if (JSON.parse(localStorage.getItem("eyes"))) {
+  //     this.eyes = JSON.parse(localStorage.getItem("eyes"));
+  //   }
+  //   if (JSON.parse(localStorage.getItem("Film"))) {
+  //     this.film[1] = JSON.parse(localStorage.getItem("Film"));
+  //     if (this.eyes.some((obj) => obj.netflix_id == this.film[1].netflix_id)) {
+  //       this.film[1].infoBase.eye = " /assets/eye-full.png";
+  //     } else {
+  //       this.film[1].infoBase.eye = " /assets/eye.png";
+  //     }
+  //     if (this.likes.some((obj) => obj.netflix_id == this.film[1].netflix_id)) {
+  //       console.log(" /assets/like-full.png");
+  //       this.film[1].infoBase.like = " /assets/like-full.png";
+  //     } else {
+  //       this.film[1].infoBase.like = " /assets/like.png";
+  //     }
+  //     this.SET_FILM_TO_STATE(this.film[1])
+  //   }
+  //   if (JSON.parse(localStorage.getItem("LastFilm"))) {
+  //     this.film[2] = JSON.parse(localStorage.getItem("LastFilm"));
+  //     if (this.eyes.some((obj) => obj.netflix_id == this.film[2].netflix_id)) {
+  //       this.film[2].infoBase.eye = " /assets/eye-full.png";
+  //     } else {
+  //       this.film[2].infoBase.eye = " /assets/eye.png";
+  //     }
+  //     if (this.likes.some((obj) => obj.netflix_id == this.film[2].netflix_id)) {
+  //       console.log(" /assets/like-full.png");
+  //       this.film[2].infoBase.like = " /assets/like-full.png";
+  //     } else {
+  //       this.film[2].infoBase.like = " /assets/like.png";
+  //     }
+  //   }
+  //   if(JSON.parse(localStorage.getItem("history"))){
+  //     this.SET_FILMS_TO_HISTORY(JSON.parse(localStorage.getItem("history")))
+  //   }
+  //   if (this.film[1].img == " /assets/gray.jpg") {
+  //     if (this.films.length > 0) {
+  //       this.randomNumber = Math.floor(Math.random() * this.films.length);
+  //       this.film[1] = this.films[this.randomNumber];
+  //       localStorage.setItem("Film", JSON.stringify(this.film[1]));
+  //     }
+  //   }
+  // },
   methods: {
     ...mapActions(["GET_FILMS_FROM_API"]),
-    ...mapMutations(["SET_FILMS_TO_STATE","SET_FILM_TO_HISTORY","SET_FILMS_TO_HISTORY"]),
+    ...mapMutations(["SET_FILMS_TO_STATE","SET_FILM_TO_STATE","SET_FILM_TO_HISTORY","SET_FILMS_TO_HISTORY","SET_TO_ARRAY"]),
     getMovie() {
       let arraySorted = [];
       if (this.getFilms.length > 0) {
@@ -88,24 +134,20 @@ export default {
         this.randomNumber = Math.floor(Math.random() * this.getFilms.length);
         if (!this.film[1]) {
           this.film[1] = this.getFilms[this.randomNumber];
-          this.film[1].eye = " /assets/eye.png";
-          this.film[1].like = " /assets/like.png";
-          localStorage.setItem("Film", JSON.stringify(this.film[1]));
         } else {
           this.film[0] = this.getFilms[this.randomNumber];
-          this.film[0].like = " /assets/like.png";
-          this.film[0].eye = " /assets/eye.png";
-          localStorage.setItem("Film", JSON.stringify(this.film[0]));
           this.film[2] = this.film[1];
-          if (this.film[2]) {
-            localStorage.setItem("LastFilm", JSON.stringify(this.film[2]));
-          }
           this.film[1] = this.film[0];
-          
         }
-        this.SET_FILMS_TO_STATE(this.film[1]);
-        this.SET_FILM_TO_HISTORY({netflix_id:this.film[1].netflix_id,title:this.film[1].title,type:this.film[1].title_type,img:this.film[1].img})
-        localStorage.setItem('history', JSON.stringify(this.getHistory))
+        this.film[1].infoBase={
+            eye  : " /assets/eye.png",
+            like : " /assets/like.png",
+          }
+        localStorage.setItem("LastFilm",   JSON.stringify(this.film[2]));
+        localStorage.setItem("Film",       JSON.stringify(this.film[1]));
+        this.SET_FILM_TO_STATE(this.film[1])
+        this.SET_FILM_TO_HISTORY({netflix_id:this.film[1].netflix_id,title:this.title,type:this.film[1].title_type,img:this.film[1].img})
+        localStorage.setItem('history', JSON.stringify(this.getHistory));
       } else {
         console.log(this.films.length);
         if(this.limit<80) this.SET_FILMS();
@@ -115,8 +157,8 @@ export default {
       let param;
       let obj;
       if (JSON.parse(localStorage.getItem("Param"))) {
-        console.log(param);
         param = JSON.parse(localStorage.getItem("Param"));
+        console.log(param);
         obj =
           "end_rating=" +
           param.rating[1] +
@@ -137,12 +179,16 @@ export default {
         if (param.genre && param.genre != 0) {
           obj += "&genre_list=" + param.genre;
         }
+      }else{
+        obj = "order_by=rating&start_rating=3"
       }
-      this.limit++;
-      console.log(this.limit);
-      console.log(obj);
-      localStorage.setItem("limit", this.limit);
-      this.GET_FILMS_FROM_API(obj);
+      if(obj!=localStorage.getItem("obj") || this.getFilms.length == 0){
+        localStorage.setItem("obj", obj);
+        this.limit++;
+        console.log(this.limit);
+        localStorage.setItem("limit", this.limit);
+        this.GET_FILMS_FROM_API(obj);
+      }
     },
     getLastMovie() {
       if (this.film[2].img != " /assets/gray.jpg") {
@@ -150,7 +196,7 @@ export default {
         this.film[1] = this.film[2];
         this.film[2] = this.film[0];
         this.film[0] = {};
-        this.SET_FILMS_TO_STATE(this.film[1]);
+        this.SET_FILM_TO_STATE(this.film[1])
         this.SET_FILM_TO_HISTORY({netflix_id:this.film[1].netflix_id,title:this.film[1].title,type:this.film[1].title_type,img:this.film[1].img})
         localStorage.setItem("LastFilm", JSON.stringify(this.film[2]));
         localStorage.setItem("Film", JSON.stringify(this.film[1]));
@@ -158,20 +204,8 @@ export default {
       }
     },
     addToArray(array, property) {
-      if (!array.some((film) => film.netflix_id == this.film[1].netflix_id)) {
-        array.push({
-          img: this.film[1].img,
-          title: this.title,
-          netflix_id: this.film[1].netflix_id,
-        });
-        this.film[1][property] = " /assets/" + property + "-full.png";
-      } else if (
-        array.findIndex((film) => film.netflix_id == this.film[1].netflix_id) != -1) {
-        array.splice(array.findIndex((film) => film.netflix_id == this.film[1].netflix_id),1);
-        this.film[1][property] = " /assets/" + property + ".png";
-      }
-      console.log(array);
-      localStorage.setItem(property + "s", JSON.stringify(array));
+    this.SET_TO_ARRAY({to_array:array, property:property,from_array_name: 'film',title: this.title});
+      this.film[1]=this.getFilm
     },
     deleteSymbols(obj, oldSymbol, updateSymbol) {
       if (obj) {
@@ -184,7 +218,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getFilms", "getHistory"]),
+    ...mapGetters(["getFilms", "getFilm", "getHistory"]),
     synopsis() {
       return this.deleteSymbols(this.film[1].synopsis, "&#39;", "'");
     },
@@ -203,7 +237,7 @@ export default {
           :src="film[2].img"
           alt=""
           class="section blocks"
-          v-show="film[2].img != ' /assets/gray.jpg'"
+          v-show="film[2].img != ' /assets/gray.jpg' && film[2].img!=''"
         />
       </section>
       <section>
@@ -211,8 +245,8 @@ export default {
       </section>
       <section >
         <div class="section blocks bg-gray-400 overflow-hidden ">
-          <div class="bg-yellow-300 font-medium p-5 title">{{ title }}</div>
-          <div class="bg-gray-300 mt-5 h-full p-2 text-justify text">{{ synopsis }}</div>
+          <div class="title">{{ title }}</div>
+            <div class="text">{{ synopsis }}</div>
         </div>
       </section>
     </div>
@@ -221,30 +255,28 @@ export default {
         <button
           class="p-1 w-40 blocks button"
           @click="getLastMovie"
-          v-show="film[2].img != 'src/assets/gray.jpg'"
+          v-show="film[2].img != ' /assets/gray.jpg' && film[2].img!=''"
         >
           Попереднє
         </button>
       </section>
       <section class="flex">
         <div class="flex">
-          <button class="small-button blocks button" @click="addToArray(likes, 'like')">
+          <button class="small-button blocks button" @click="addToArray(likes, 'like')" v-show="film[1].img != ' /assets/gray.jpg'">
             <img
-              :src="film[1].like"
+              :src="film[1].infoBase.like"
               alt=""
               class="w-9 h-9"
-              v-show="film[1].img != 'src/assets/gray.jpg'"
             />
           </button>
         </div>
 
         <div class="flex">
-          <button class="small-button blocks button" @click="addToArray(eyes, 'eye')">
+          <button class="small-button blocks button" @click="addToArray(eyes, 'eye')" v-show="film[1].img != ' /assets/gray.jpg'">
             <img
-              :src="film[1].eye"
+              :src="film[1].infoBase.eye"
               alt=""
               class="w-9 h-9"
-              v-show="film[1].img != 'src/assets/gray.jpg'"
             />
           </button>
         </div>
@@ -253,7 +285,7 @@ export default {
         <router-link :to="{ name: 'details', params: { netflix_id: film[1].netflix_id } }"
           ><button
             class="p-1 w-40 blocks button"
-            v-show="film[1].img != 'src/assets/gray.jpg'"
+            v-show="film[1].img != ' /assets/gray.jpg' && film[1].img != ''"
           >
             Детальніше
           </button></router-link
@@ -273,6 +305,9 @@ export default {
 </template>
 
 <style scoped>
+.text{
+  @apply bg-gray-300 mt-5 h-full p-2 text-justify;
+}
 div {
   @apply w-full;
 }
@@ -300,6 +335,7 @@ section div {
   @apply rounded-3xl;
 }
 .title {
+  @apply bg-yellow-300 font-medium p-5;
   font-size: large;
 }
 .main-button {
@@ -342,6 +378,7 @@ section div {
     min-width: auto;
   }
   .text {
+    
     font-size: 20px;
   }
   .title {

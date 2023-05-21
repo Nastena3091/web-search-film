@@ -37,6 +37,12 @@
           <div class="bg-gray-300 mt-5 h-max text-justify p-2">{{ synopsis }}</div>
           <div class="bg-gray-300 mt-5 h-max text-justify overflow-hidden">
             <table>
+              <tr v-show="getInfo.detail.title_type">
+                <td class="w-max">Тип</td>
+                <td class="w-full">
+                  {{ getInfo.detail.title_type}}
+                </td>
+              </tr>
               <tr v-show="runtime != '0 : 0 : 0'">
                 <td class="w-max">Тривалість</td>
                 <td class="w-full">{{ runtime }}</td>
@@ -44,6 +50,12 @@
               <tr v-show="genre">
                 <td class="w-max">Жанр</td>
                 <td class="w-full">{{ genre }}</td>
+              </tr>
+              <tr v-show="getInfo.detail.origin_country">
+                <td class="w-max">Країна</td>
+                <td class="w-full">
+                  {{ getInfo.detail.origin_country}}
+                </td>
               </tr>
               <tr v-show="directors">
                 <td class="w-max">Режисери</td>
@@ -63,6 +75,7 @@
                   {{ getInfo.detail.rating ? getInfo.detail.rating : film.rating }}
                 </td>
               </tr>
+              
             </table>
           </div>
         </div>
@@ -85,48 +98,82 @@ export default {
       eyes: [],
     };
   },
-  mounted() {
+  async mounted() {
     this.film.netflix_id = this.$route.params.netflix_id;
 
-    if (JSON.parse(localStorage.getItem("info"))) {
-      this.SET_DETAILS_TO_STATE(JSON.parse(localStorage.getItem("info")));
-    }
-    if (JSON.parse(localStorage.getItem("limit"))) {
-      this.limit = JSON.parse(localStorage.getItem("limit"));
-    }
-    if (this.film.netflix_id == this.getInfo.detail.netflix_id) {
-    } else{
-      this.SET_DETAILS_TO_STATE('')
-      if (this.limit <= 80) {
-        this.SET_INFO();
+    const infoFromStorage = JSON.parse(localStorage.getItem("info"));
+    const limit = JSON.parse(localStorage.getItem("limit"));
+    const likes = JSON.parse(localStorage.getItem("likes"));
+    const eyes = JSON.parse(localStorage.getItem("eyes"));
+
+    if (infoFromStorage) this.SET_DETAILS_TO_STATE(infoFromStorage);
+    if (limit) this.limit = limit;
+    if (this.film.netflix_id != this.getInfo.detail.netflix_id) {
+      this.SET_DETAILS_TO_STATE("");
+      if (limit <= 80) {
+        await this.SET_INFO();
         console.log(this.film.netflix_id + " - film");
       }
     }
-    if (JSON.parse(localStorage.getItem("likes"))) {
-      this.likes = JSON.parse(localStorage.getItem("likes"));
+
+    if (likes) {
+      this.likes = likes;
+      console.log('like');
       if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        console.log(" /assets/like-full.png");
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/like-full.png",property:"like"})
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /assets/like-full.png", property: "like" });
       }
     }
-    if (JSON.parse(localStorage.getItem("eyes"))) {
-      this.eyes = JSON.parse(localStorage.getItem("eyes"));
+
+    if (eyes) {
+      this.eyes = eyes;
+      console.log("eye");
       if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        console.log(" /assets/eye-full.png");
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/eye-full.png",property:"eye"})
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /assets/eye-full.png", property: "eye" });
       }
     }
   },
+
+
+  // mounted() {
+  //   this.film.netflix_id = this.$route.params.netflix_id;
+
+  //   if (JSON.parse(localStorage.getItem("info"))) {
+  //     this.SET_DETAILS_TO_STATE(JSON.parse(localStorage.getItem("info")));
+  //   }
+  //   if (JSON.parse(localStorage.getItem("limit"))) {
+  //     this.limit = JSON.parse(localStorage.getItem("limit"));
+  //   }
+  //   if (this.film.netflix_id == this.getInfo.detail.netflix_id) {
+  //   } else{
+  //     this.SET_DETAILS_TO_STATE('')
+  //     if (this.limit <= 80) {
+  //       this.SET_INFO();
+  //       console.log(this.film.netflix_id + " - film");
+  //     }
+  //   }
+  //   if (JSON.parse(localStorage.getItem("likes"))) {
+  //     this.likes = JSON.parse(localStorage.getItem("likes"));
+  //     if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
+  //       console.log(" /assets/like-full.png");
+  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/like-full.png",property:"like"})
+  //     }
+  //   }
+  //   if (JSON.parse(localStorage.getItem("eyes"))) {
+  //     this.eyes = JSON.parse(localStorage.getItem("eyes"));
+  //     if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
+  //       console.log(" /assets/eye-full.png");
+  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/eye-full.png",property:"eye"})
+  //     }
+  //   }
+  // },
   methods: {
     ...mapActions(["GET_DETAILS_FROM_API"]),
-    ...mapMutations(["SET_DETAILS_TO_STATE","SET_INFOBASE_FOR_DETAILS_TO_STATE"]),
-    SET_INFO() {
-      this.limit++;
-      this.limit++;
-      this.limit++;
+    ...mapMutations(["SET_DETAILS_TO_STATE","SET_INFOBASE_FOR_DETAILS_TO_STATE","SET_TO_ARRAY"]),
+    async SET_INFO() {
+      this.limit+=3;
       console.log(this.limit);
       localStorage.setItem("limit", this.limit);
-      this.GET_DETAILS_FROM_API(this.film.netflix_id);
+      await this.GET_DETAILS_FROM_API(this.film.netflix_id);
       console.log(this.getInfo);
     },
     GET_PEOPLE(people) {
@@ -143,29 +190,7 @@ export default {
           .join(", "),"&#39;","'");
     },
     addToArray(array, property) {
-      let arrayWithEditInfoBase = this.getInfo;
-      if (!array.some((film) => film.netflix_id == this.getInfo.detail.netflix_id)) {
-        array.push({
-          img: this.getInfo.detail.large_image
-            ? this.getInfo.detail.large_image
-            : this.getInfo.detail.default_image,
-          title: this.title,
-          netflix_id: this.getInfo.detail.netflix_id,
-        });
-        arrayWithEditInfoBase.infoBase[property] =
-          " /assets/" + property + "-full.png";
-      } else if (
-        array.findIndex((film) => film.netflix_id == this.getInfo.detail.netflix_id) != -1
-      ) {
-        array.splice(
-          array.findIndex((film) => film.netflix_id == this.getInfo.detail.netflix_id),
-          1
-        );
-        arrayWithEditInfoBase.infoBase[property] = " /assets/" + property + ".png";
-      }
-      this.SET_DETAILS_TO_STATE(arrayWithEditInfoBase);
-      console.log(array);
-      localStorage.setItem(property + "s", JSON.stringify(array));
+      this.SET_TO_ARRAY({to_array:array, property:property,from_array_name: 'info',title: this.title});
     },
     deleteSymbols(obj, oldSymbol, updateSymbol) {
       if (obj) {
@@ -223,7 +248,7 @@ section {
   @apply w-full text-center flex-col justify-center items-center p-1;
 }
 main {
-  min-width: fit-content
+  min-width: fit-content;
 }
 img {
   @apply self-center;

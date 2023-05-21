@@ -4,7 +4,7 @@ import genreMovie from "../data/genreMovie";
 import genreSeries from "../data/genreSeries";
 import VueSimpleRangeSlider from "vue-simple-range-slider";
 import "vue-simple-range-slider/css";
-
+import { mapMutations } from "vuex";
 export default {
   components:{VueSimpleRangeSlider},
   data() {
@@ -36,6 +36,7 @@ export default {
     }
   },
   methods:{
+    ...mapMutations(['SET_FILMS_TO_STATE']),
     GetSort(array, property) {
       return array.sort(function(a, b) {
         let x = a[property];
@@ -96,6 +97,7 @@ export default {
         arrowType3: this.arrowType3,
       }
       localStorage.setItem('Param', JSON.stringify(param))
+      this.SET_FILMS_TO_STATE('')
     },
     changeType(){
       this.genre=0
@@ -200,7 +202,6 @@ export default {
 <style scoped>
 main{
   display: flex;
-  
 }
 .container{
   @apply bg-gray-400 overflow-hidden rounded-3xl mb-4;
@@ -211,9 +212,8 @@ section{
 .main-button {
   @apply bg-yellow-300 p-3 mb-4 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all;
 }
-
 .hat{
-  @apply w-max bg-gray-300 rounded-3xl p-4 w-full text-center;
+  @apply bg-gray-300 rounded-3xl p-4 w-full text-center;
 }
 td{
   border-bottom: 1px solid rgb(135, 136, 140);
