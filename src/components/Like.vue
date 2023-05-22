@@ -34,10 +34,10 @@ export default {
         '$route.params': {
             handler() {
                 this.type = this.$route.params.data_base;
-                if(JSON.parse(localStorage.getItem(this.type+'s'))){
-                    this.array=JSON.parse(localStorage.getItem(this.type+'s'))
-                }else if(JSON.parse(localStorage.getItem(this.type)))
-                    this.array=JSON.parse(localStorage.getItem(this.type))
+                if(this.type!='history'){
+                    this.array=JSON.parse(localStorage.getItem(this.type+'s')) !== null ? JSON.parse(localStorage.getItem(this.type+'s')) : [];
+                }else
+                    this.array=JSON.parse(localStorage.getItem(this.type)) !== null ? JSON.parse(localStorage.getItem(this.type)) : [];
             },
             immediate: true
         }
