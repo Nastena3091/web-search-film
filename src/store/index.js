@@ -109,7 +109,7 @@ const store = createStore({
               from_array=state.film;
               break;
           }
-          if (!to_array.some((film) => film.netflix_id === from_array.netflix_id)) {
+          if (!to_array.some((film) => film.netflix_id == from_array.netflix_id)) {
             to_array.push({
               img: img,
               title: title,
@@ -117,8 +117,8 @@ const store = createStore({
               type: from_array.title_type,
             });
             way=" /assets/" + property + "-full.png";
-          } else if (to_array.findIndex((film) => film.netflix_id === from_array.netflix_id) !== -1) {
-            to_array.splice(to_array.findIndex((film) => film.netflix_id === from_array.netflix_id), 1);
+          } else if (to_array.findIndex((film) => film.netflix_id == from_array.netflix_id) != -1) {
+            to_array.splice(to_array.findIndex((film) => film.netflix_id == from_array.netflix_id), 1);
             way=" /assets/" + property + ".png";
           }
           switch (from_array_name) {
