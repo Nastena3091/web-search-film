@@ -32,10 +32,15 @@ export default defineConfig({
         ]
       },
       workbox: {
+        globDirectory:"D:/web-search-film/my-project/",
         globPatterns:[
             '**/*/{js,css,woff2,png,svg,ico,jpg,jpeg,webp}'
         ],
         navigateFallback:null,
+        globIgnores: [
+          "node_modules",
+          "dist",
+        ]
       },
     }),
   ],
