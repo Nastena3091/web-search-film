@@ -134,38 +134,6 @@ export default {
   },
 
 
-  // mounted() {
-  //   this.film.netflix_id = this.$route.params.netflix_id;
-
-  //   if (JSON.parse(localStorage.getItem("info"))) {
-  //     this.SET_DETAILS_TO_STATE(JSON.parse(localStorage.getItem("info")));
-  //   }
-  //   if (JSON.parse(localStorage.getItem("limit"))) {
-  //     this.limit = JSON.parse(localStorage.getItem("limit"));
-  //   }
-  //   if (this.film.netflix_id == this.getInfo.detail.netflix_id) {
-  //   } else{
-  //     this.SET_DETAILS_TO_STATE('')
-  //     if (this.limit <= 80) {
-  //       this.SET_INFO();
-  //       console.log(this.film.netflix_id + " - film");
-  //     }
-  //   }
-  //   if (JSON.parse(localStorage.getItem("likes"))) {
-  //     this.likes = JSON.parse(localStorage.getItem("likes"));
-  //     if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-  //       console.log(" /assets/like-full.png");
-  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/like-full.png",property:"like"})
-  //     }
-  //   }
-  //   if (JSON.parse(localStorage.getItem("eyes"))) {
-  //     this.eyes = JSON.parse(localStorage.getItem("eyes"));
-  //     if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-  //       console.log(" /assets/eye-full.png");
-  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/eye-full.png",property:"eye"})
-  //     }
-  //   }
-  // },
   methods: {
     ...mapActions(["GET_DETAILS_FROM_API"]),
     ...mapMutations(["SET_DETAILS_TO_STATE","SET_INFOBASE_FOR_DETAILS_TO_STATE","SET_TO_ARRAY"]),

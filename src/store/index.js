@@ -34,8 +34,8 @@ const store = createStore({
               }
             ],
             infoBase: {
-              like:'/assets/like.png', 
-              eye:'/assets/eye.png'
+              like:'./assets/like.png', 
+              eye:'./assets/eye.png'
             }
           },
         options:{
@@ -179,7 +179,7 @@ const store = createStore({
                 .then(responses => Promise.all(responses.map(response => response.json())))
                 .then(data => {
                 const [details, genres, people] = data;
-                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase':{ like:'/assets/like.png', eye:'/assets/eye.png'}}
+                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase':{ like:'./assets/like.png', eye:'./assets/eye.png'}}
                 console.log(data);
                 commit('SET_DETAILS_TO_STATE',info)
                 console.log(state.info);
