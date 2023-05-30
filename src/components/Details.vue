@@ -120,7 +120,7 @@ export default {
       this.likes = likes;
       console.log('like');
       if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /assets/like-full.png", property: "like" });
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /web-search-film/assets/like-full.png", property: "like" });
       }
     }
 
@@ -128,7 +128,7 @@ export default {
       this.eyes = eyes;
       console.log("eye");
       if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /assets/eye-full.png", property: "eye" });
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: " /web-search-film/assets/eye-full.png", property: "eye" });
       }
     }
   },
@@ -154,15 +154,15 @@ export default {
   //   if (JSON.parse(localStorage.getItem("likes"))) {
   //     this.likes = JSON.parse(localStorage.getItem("likes"));
   //     if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-  //       console.log(" /assets/like-full.png");
-  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/like-full.png",property:"like"})
+  //       console.log(" /web-search-film/assets/like-full.png");
+  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /web-search-film/assets/like-full.png",property:"like"})
   //     }
   //   }
   //   if (JSON.parse(localStorage.getItem("eyes"))) {
   //     this.eyes = JSON.parse(localStorage.getItem("eyes"));
   //     if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-  //       console.log(" /assets/eye-full.png");
-  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /assets/eye-full.png",property:"eye"})
+  //       console.log(" /web-search-film/assets/eye-full.png");
+  //       this.SET_INFOBASE_FOR_DETAILS_TO_STATE({info:" /web-search-film/assets/eye-full.png",property:"eye"})
   //     }
   //   }
   // },
