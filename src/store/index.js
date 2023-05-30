@@ -94,8 +94,8 @@ const store = createStore({
                 }
               ],
               infoBase: {
-                like:'/assets/like.png', 
-                eye:'/assets/eye.png'
+                like:'./assets/like.png', 
+                eye:'./assets/eye.png'
               }
             }
           }
@@ -123,10 +123,10 @@ const store = createStore({
               netflix_id: from_array.netflix_id,
               type: from_array.title_type,
             });
-            way="/assets/" + property + "-full.png";
+            way="./assets/" + property + "-full.png";
           } else if (to_array.findIndex((film) => film.netflix_id == from_array.netflix_id) != -1) {
             to_array.splice(to_array.findIndex((film) => film.netflix_id == from_array.netflix_id), 1);
-            way="/assets/" + property + ".png";
+            way="./assets/" + property + ".png";
           }
           switch (from_array_name) {
             case 'info':

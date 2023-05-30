@@ -9,7 +9,7 @@ export default {
       film: [
         {},
         {
-          img: './assets/eye.png',
+          img: './assets/gray.png',
           netflix_id: 0,
           infoBase: {
               like:'./assets/like.png',
@@ -50,7 +50,7 @@ export default {
     if (lastFilmFromStorage) {
       this.film[2] = lastFilmFromStorage;
       this.film[2].infoBase.eye = this.eyes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
-        ? getConst.EYE_FULL
+        ? this.getConst.EYE_FULL
         : this.getConst.EYE;
       this.film[2].infoBase.like = this.likes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
         ? this.getConst.LIKE_FULL
