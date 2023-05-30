@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import CONSTANS from '../../const.js'
 import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   data() {
@@ -121,7 +120,7 @@ export default {
       this.likes = likes;
       console.log('like');
       if (this.likes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: CONSTANS.LIKE_FULL, property: "like" });
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: this.getConst.LIKE_FULL, property: "like" });
       }
     }
 
@@ -129,7 +128,7 @@ export default {
       this.eyes = eyes;
       console.log("eye");
       if (this.eyes.some((obj) => obj.netflix_id == this.film.netflix_id)) {
-        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: CONSTANS.EYE_FULL, property: "eye" });
+        this.SET_INFOBASE_FOR_DETAILS_TO_STATE({ info: this.getConst.EYE_FULL, property: "eye" });
       }
     }
   },
@@ -204,7 +203,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getInfo"]),
+    ...mapGetters(["getInfo",'getConst']),
     synopsis() {
       return this.deleteSymbols(this.getInfo.detail.synopsis, "&#39;", "'");
     },

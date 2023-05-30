@@ -1,6 +1,5 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import CONSTANS from '../../const.js'
 
 export default {
   data() {
@@ -10,14 +9,14 @@ export default {
       film: [
         {},
         {
-          img: CONSTANS.GRAY,
+          img: './assets/eye.png',
           netflix_id: 0,
           infoBase: {
-              like: CONSTANS.LIKE , 
-              eye: CONSTANS.EYE
+              like:'./assets/like.png',
+              eye: './assets/eye.png',
             },
         },
-        {img: CONSTANS.GRAY},
+        {img: './assets/gray.jpg'},
       ],
       likes: [],
       eyes: [],
@@ -40,25 +39,25 @@ export default {
     if (filmFromStorage) {
       this.film[1] = filmFromStorage;
       this.film[1].infoBase.eye = this.eyes.some((obj) => obj.netflix_id == this.film[1].netflix_id)
-        ? CONSTANS.EYE_FULL
-        : CONSTANS.EYE;
+        ? this.getConst.EYE_FULL
+        : this.getConst.EYE;
       this.film[1].infoBase.like = this.likes.some((obj) => obj.netflix_id == this.film[1].netflix_id)
-        ? CONSTANS.LIKE_FULL
-        : CONSTANS.LIKE;
+        ? this.getConst.LIKE_FULL
+        : this.getConst.LIKE;
       this.SET_FILM_TO_STATE(this.film[1]);
     }
 
     if (lastFilmFromStorage) {
       this.film[2] = lastFilmFromStorage;
       this.film[2].infoBase.eye = this.eyes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
-        ? CONSTANS.EYE_FULL
-        : CONSTANS.EYE;
+        ? getConst.EYE_FULL
+        : this.getConst.EYE;
       this.film[2].infoBase.like = this.likes.some((obj) => obj.netflix_id == this.film[2].netflix_id)
-        ? CONSTANS.LIKE_FULL
-        : CONSTANS.LIKE;
+        ? this.getConst.LIKE_FULL
+        : this.getConst.LIKE;
     }
 
-    if (this.film[1].img == CONSTANS.GRAY && this.films.length > 0) {
+    if (this.film[1].img == this.getConst.GRAY && this.films.length > 0) {
       this.randomNumber = Math.floor(Math.random() * this.films.length);
       this.film[1] = this.films[this.randomNumber];
       localStorage.setItem("Film", JSON.stringify(this.film[1]));
@@ -87,8 +86,8 @@ export default {
           this.film[1] = this.film[0];
         }
         this.film[1].infoBase={
-            eye  : CONSTANS.EYE,
-            like : CONSTANS.LIKE,
+            eye  : this.getConst.EYE,
+            like : this.getConst.LIKE,
           }
         localStorage.setItem("LastFilm",   JSON.stringify(this.film[2]));
         localStorage.setItem("Film",       JSON.stringify(this.film[1]));
@@ -138,7 +137,7 @@ export default {
       }
     },
     getLastMovie() {
-      if (this.film[2].img != CONSTANS.GRAY) {
+      if (this.film[2].img != this.getConst.GRAY) {
         this.film[0] = this.film[1];
         this.film[1] = this.film[2];
         this.film[2] = this.film[0];
@@ -165,7 +164,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getFilms", "getFilm", "getHistory"]),
+    ...mapGetters(["getFilms", "getFilm", "getHistory",'getConst']),
     synopsis() {
       return this.deleteSymbols(this.film[1].synopsis, "&#39;", "'");
     },
@@ -184,7 +183,7 @@ export default {
           :src="film[2].img"
           alt=""
           class="section blocks"
-          v-show="film[2].img != CONSTANS.GRAY && film[2].img!=''"
+          v-show="film[2].img != getConst.GRAY && film[2].img!=''"
         />
       </section>
       <section>
@@ -202,14 +201,14 @@ export default {
         <button
           class="p-1 w-40 blocks button"
           @click="getLastMovie"
-          v-show="film[2].img != CONSTANS.GRAY && film[2].img!=''"
+          v-show="film[2].img != getConst.GRAY && film[2].img!=''"
         >
           Попереднє
         </button>
       </section>
       <section class="flex">
         <div class="flex">
-          <button class="small-button blocks button" @click="addToArray(likes, 'like')" v-show="film[1].img !=  CONSTANS.GRAY">
+          <button class="small-button blocks button" @click="addToArray(likes, 'like')" v-show="film[1].img !=  getConst.GRAY">
             <img
               :src="film[1].infoBase.like"
               alt=""
@@ -219,7 +218,7 @@ export default {
         </div>
 
         <div class="flex">
-          <button class="small-button blocks button" @click="addToArray(eyes, 'eye')" v-show="film[1].img !=  CONSTANS.GRAY">
+          <button class="small-button blocks button" @click="addToArray(eyes, 'eye')" v-show="film[1].img !=  getConst.GRAY">
             <img
               :src="film[1].infoBase.eye"
               alt=""
@@ -232,7 +231,7 @@ export default {
         <router-link :to="{ name: 'details', params: { netflix_id: film[1].netflix_id } }"
           ><button
             class="p-1 w-40 blocks button"
-            v-show="film[1].img !=  CONSTANS.GRAY && film[1].img != ''"
+            v-show="film[1].img !=  getConst.GRAY && film[1].img != ''"
           >
             Детальніше
           </button></router-link

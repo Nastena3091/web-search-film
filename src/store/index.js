@@ -48,6 +48,13 @@ const store = createStore({
         history:[],
         likes:[],
         eyes:[],
+        CONSTANS:{
+          EYE : './assets/eye.png',
+          EYE_FULL:'./assets/eye-full.png',
+          GRAY:'./assets/gray.jpg',
+          LIKE:'./assets/like.png',
+          LIKE_FULL:'./assets/like-full.png'
+        }
     },
     mutations:{
         SET_FILMS_TO_STATE:(state, films)=>{
@@ -182,6 +189,7 @@ const store = createStore({
         },
     },
     getters:{
+        getConst: state=> state.CONSTANS,
         getFilms: state => state.films,
         getFilm: state => state.film,
         getInfo:state => state.info,
