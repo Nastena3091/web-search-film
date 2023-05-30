@@ -8,7 +8,7 @@
                     <p class="text truncate" :title="a.title">{{ a.title }}</p>
                 </div>
                 <div class="button bord diva flex justify-center items-center" @click="removeInArray(a)" v-if="type!='history'">
-                    <img :src="' /web-search-film/assets/'+type+'-full.png'" alt="" class="w-3/4">
+                    <img :src="' /assets/'+type+'-full.png'" alt="" class="w-3/4">
                 </div>
             </div> 
         </div>
