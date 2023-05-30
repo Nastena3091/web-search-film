@@ -5,6 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/web-search-film/",
+  build:{
+    outDir: 'docs'
+  },
   plugins: [
     vue(),
     VitePWA({
@@ -40,7 +43,7 @@ export default defineConfig({
         navigateFallback:null,
         globIgnores: [
           "node_modules",
-          "dist",
+          "docs",
         ]
       },
     }),
