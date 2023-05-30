@@ -9,7 +9,7 @@ export default {
       film: [
         {},
         {
-          img: './assets/gray.png',
+          img: './assets/gray.jpg',
           netflix_id: 0,
           infoBase: {
               like:'./assets/like.png',
