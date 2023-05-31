@@ -1,6 +1,12 @@
 <template>
   <main>
-    <div class="container mr-auto ml-auto" v-if="getInfo.detail.netflix_id">
+    <div class="preloader" v-if="getInfo.infoBase.status=='loading'">
+      <div class="loader">
+        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      </div>
+    </div>
+
+    <div class="container mr-auto ml-auto" v-else-if="getInfo.infoBase.status=='loaded'">
       <section class="flex w-2/5">
         <img
           v-show="getInfo.detail.large_image || getInfo.detail.default_image"
@@ -81,7 +87,7 @@
         </div>
       </section>
     </div>
-    <div class="container mr-auto ml-auto" v-else>
+    <div class="container mr-auto ml-auto" v-else-if="getInfo.infoBase.status=='empty'">
       <p class="text-6xl text-white">Проблема зі з'єднанням, можливо перевищен ліміт запитів</p>
     </div>
   </main>
@@ -89,6 +95,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import "../style/loader.css";
 export default {
   data() {
     return {
@@ -111,6 +118,7 @@ export default {
     if (this.film.netflix_id != this.getInfo.detail.netflix_id) {
       this.SET_DETAILS_TO_STATE("");
       if (limit <= 80) {
+        this.SET_DETAILS_TO_STATE("load");
         await this.SET_INFO();
         console.log(this.film.netflix_id + " - film");
       }
@@ -209,6 +217,7 @@ export default {
 </script>
 
 <style scoped>
+
 div {
   @apply w-full;
 }
@@ -216,7 +225,9 @@ section {
   @apply w-full text-center flex-col justify-center items-center p-1;
 }
 main {
-  min-width: fit-content;
+  min-width: fit-content ;
+  min-height: 400px;
+  position: relative;
 }
 img {
   @apply self-center;

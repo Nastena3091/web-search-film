@@ -64,7 +64,40 @@ const store = createStore({
           state.film=film
         },
         SET_DETAILS_TO_STATE:(state,info)=>{
-          if(info){
+          if(info=='load'){
+            state.info={
+              detail: {
+                title:'',
+                year:'',
+                synopsis:'',
+                runtime:'',
+                rating:'',
+                netflix_id:'',
+                large_image:'',
+                default_image:'',
+                alt_runtime:'',
+              },
+              genreList: [
+                {
+                  genre:'',
+                  genre_id:0
+                }
+              ],
+              people: [
+                {
+                  netflix_id:0,
+                  full_name:'',
+                  person_type:'',
+                  title:'',
+                }
+              ],
+              infoBase: {
+                like:'./assets/like.png', 
+                eye:'./assets/eye.png',
+                status: 'loading'
+              }
+            }
+          }else if (info){
             state.info=info
           }else{
             state.info={
@@ -95,10 +128,12 @@ const store = createStore({
               ],
               infoBase: {
                 like:'./assets/like.png', 
-                eye:'./assets/eye.png'
+                eye:'./assets/eye.png',
+                status: 'empty'
               }
             }
           }
+          console.log(state.info);
         },
         SET_INFOBASE_FOR_DETAILS_TO_STATE:(state,payload)=>{
           state.info.infoBase[payload.property]=payload.info
@@ -179,13 +214,16 @@ const store = createStore({
                 .then(responses => Promise.all(responses.map(response => response.json())))
                 .then(data => {
                 const [details, genres, people] = data;
-                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase':{ like:'./assets/like.png', eye:'./assets/eye.png'}}
+                const info={'detail':details,'genreList':genres.results,'people':people.results, 'infoBase':{ like:'./assets/like.png', eye:'./assets/eye.png', status:'loaded'}}
                 console.log(data);
                 commit('SET_DETAILS_TO_STATE',info)
                 console.log(state.info);
                 localStorage.setItem('info', JSON.stringify(state.info));
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                  console.error(err)
+                  commit('SET_DETAILS_TO_STATE','')
+                });
         },
     },
     getters:{
