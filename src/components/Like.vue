@@ -15,7 +15,7 @@
     </div>
   </main>
   <main v-else>
-    <p class="text-9xl text-white">ВАШ СПИСОК ПОРОЖНІЙ</p>
+    <p class="text-8xl text-white">ВАШ СПИСОК ПОРОЖНІЙ</p>
   </main>
 </template>
 
@@ -83,9 +83,12 @@ img{
 div.diva:hover{
     @apply bg-gray-200 contrast-150 transition-all;
 }
-@media(max-width: 767px){
+@media(max-width: 800px){
     .section{
         width: calc(1/3*100% - (1 - 1/3)*24px);
+    }
+    main > p{
+        @apply text-6xl
     }
 }
 @media (max-width: 500px){
@@ -96,6 +99,9 @@ div.diva:hover{
 @media (max-width: 400px){
     .section{
         width: 100%;
+    }
+    main > p{
+        @apply text-4xl
     }
 }
 </style>

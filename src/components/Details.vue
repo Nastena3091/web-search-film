@@ -264,4 +264,9 @@ td {
     margin-left: auto;
   }
 }
+@media (max-width:400px){
+  div>p{
+    @apply text-4xl
+  }
+}
 </style>

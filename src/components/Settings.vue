@@ -18,21 +18,21 @@ export default {
       arrowType1:'',
       arrowType2:'arrow down',
       arrowType3:'',
+      param:[]
     }
   },
   mounted(){
-    let param
     if(JSON.parse(localStorage.getItem('Param'))){
-      param=JSON.parse(localStorage.getItem('Param'))
-      this.type = param.type
-      this.genre = param.genre
-      this.order_by = param.order_by
-      this.country = param.country
-      this.rating = param.rating
-      this.date = param.date
-      this.arrowType1 = param.arrowType1
-      this.arrowType2 = param.arrowType2
-      this.arrowType3 = param.arrowType3
+      this.param=JSON.parse(localStorage.getItem('Param'))
+      this.type = this.param.type
+      this.genre = this.param.genre
+      this.order_by = this.param.order_by
+      this.country = this.param.country
+      this.rating = this.param.rating
+      this.date = this.param.date
+      this.arrowType1 = this.param.arrowType1
+      this.arrowType2 = this.param.arrowType2
+      this.arrowType3 = this.param.arrowType3
     }
   },
   methods:{
@@ -83,18 +83,32 @@ export default {
       console.log(order);
       this.order_by=order
     },
-    Save(){
+    SaveReset(option){
       let param
-      param={
-        type: this.type,
-        genre: this.genre,
-        order_by:this.order_by,
-        country: this.country,
-        rating: this.rating,
-        date: this.date,
-        arrowType1: this.arrowType1,
-        arrowType2: this.arrowType2,
-        arrowType3: this.arrowType3,
+      if(option=="save"){
+        param={
+          type: this.type,
+          genre: this.genre,
+          order_by:this.order_by,
+          country: this.country,
+          rating: this.rating,
+          date: this.date,
+          arrowType1: this.arrowType1,
+          arrowType2: this.arrowType2,
+          arrowType3: this.arrowType3,
+        }
+      } else if(option=="reset"){
+        param={
+          type:'',
+          genre:'',
+          order_by:'rating',
+          country:[],
+          rating:[3,10],
+          date:[1910,2023],
+          arrowType1:'',
+          arrowType2:'arrow down',
+          arrowType3:'',
+        }
       }
       localStorage.setItem('Param', JSON.stringify(param))
       this.SET_FILMS_TO_STATE('')
@@ -102,8 +116,15 @@ export default {
     changeType(){
       this.genre=0
     }
+    
   },
   computed:{
+    isDisables(){
+      return this.type=='' && this.genre=='' && this.order_by=='rating' && JSON.stringify(this.country)==JSON.stringify([]) && JSON.stringify(this.rating)==JSON.stringify([3,10]) && JSON.stringify(this.date)==JSON.stringify([1910,2023]) && this.arrowType1=='' && this.arrowType2=='arrow down' && this.arrowType3==''
+    },
+    isDisablesSave(){
+      return this.param.type==this.type && this.param.genre==this.genre && this.param.order_by==this.order_by && JSON.stringify(this.param.country)==JSON.stringify(this.country) && JSON.stringify(this.param.rating)==JSON.stringify(this.rating) && JSON.stringify(this.param.date)==JSON.stringify(this.date) && this.param.arrowType1==this.arrowType1 && this.param.arrowType2==this.arrowType2 && this.param.arrowType3==this.arrowType3
+    },
     genres(){
       if(this.type=="movie"){
         return [...[{title:"Нічого", id:0},...this.GetSort(genreMovie, "title")]]
@@ -143,8 +164,12 @@ export default {
           </table>
         </div>
       </div>
-      <div class=" flex justify-center">
-        <a href="#/main"><button class="main-button" @click="Save">ЗБЕРЕГТИ</button></a>
+      <div class=" flex justify-between">
+        <a href="#/main" :aria-disabled="isDisables">
+        <button class="main-button" @click="SaveReset('save')" :disabled="isDisablesSave">ЗБЕРЕГТИ</button></a>
+        <a href="#/main" :aria-disabled="isDisables">
+        <button class="main-button" @click="SaveReset('reset')" :disabled="isDisables">ОЧИСТИТИ</button>
+        </a>
       </div>
       
     </section>
@@ -187,8 +212,7 @@ export default {
             :min="1901"
             :max="2023"
             v-model="date"
-            active-bar-color="#FEE12B"
-          >
+            active-bar-color="#FEE12B">
             <template #suffix="{ value }">&#128197;</template>
           </VueSimpleRangeSlider>
         </div>
@@ -210,7 +234,7 @@ section{
   @apply w-full  mt-4 flex-col flex pr-8 pl-8;
 }
 .main-button {
-  @apply bg-yellow-300 p-3 mb-4 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all;
+  @apply bg-yellow-300 p-3 mb-4 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all disabled:bg-yellow-100 disabled:text-gray-300;
 }
 .hat{
   @apply bg-gray-300 rounded-3xl p-4 w-full text-center;
