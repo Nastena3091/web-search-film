@@ -234,7 +234,7 @@ section{
   @apply w-full  mt-4 flex-col flex pr-8 pl-8;
 }
 .main-button {
-  @apply bg-yellow-300 p-3 mb-4 font-medium rounded-full text-xl hover:bg-yellow-200 hover:transition-all disabled:bg-yellow-100 disabled:text-gray-300;
+  @apply bg-yellow-300 p-3 mb-4 ml-1 mr-1 font-medium rounded-full hover:bg-yellow-200 hover:transition-all disabled:bg-yellow-100 disabled:text-gray-300;
 }
 .hat{
   @apply bg-gray-300 rounded-3xl p-4 w-full text-center;
