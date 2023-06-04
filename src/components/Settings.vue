@@ -33,6 +33,18 @@ export default {
       this.arrowType1 = this.param.arrowType1
       this.arrowType2 = this.param.arrowType2
       this.arrowType3 = this.param.arrowType3
+    }else{
+      this.param={
+          type:'',
+          genre:'',
+          order_by:'rating',
+          country:[],
+          rating:[3,10],
+          date:[1910,2023],
+          arrowType1:'',
+          arrowType2:'arrow down',
+          arrowType3:'',
+        }
     }
   },
   methods:{
