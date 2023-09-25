@@ -44,40 +44,40 @@
           <div class="bg-gray-300 mt-5 h-max text-justify overflow-hidden">
             <table>
               <tr v-show="getInfo.detail.title_type">
-                <td class="w-max">Тип</td>
-                <td class="w-full">
+                <td class="w-max text-center">Тип</td>
+                <td class="w-full text-right">
                   {{ getInfo.detail.title_type}}
                 </td>
               </tr>
               <tr v-show="runtime != '0 : 0 : 0'">
-                <td class="w-max">Тривалість</td>
-                <td class="w-full">{{ runtime }}</td>
+                <td class="w-max text-center">Тривалість</td>
+                <td class="w-full text-right">{{ runtime }}</td>
               </tr>
-              <tr v-show="genre">
-                <td class="w-max">Жанр</td>
-                <td class="w-full">{{ genre }}</td>
+              <tr v-show="genre ">
+                <td class="w-max text-center">Жанр</td>
+                <td class="w-full text-right">{{ genre }}</td>
               </tr>
               <tr v-show="getInfo.detail.origin_country">
-                <td class="w-max">Країна</td>
-                <td class="w-full">
+                <td class="w-max text-center">Країна</td>
+                <td class="w-full text-right">
                   {{ getInfo.detail.origin_country}}
                 </td>
               </tr>
               <tr v-show="directors">
-                <td class="w-max">Режисери</td>
-                <td class="w-full">{{ directors }}</td>
+                <td class="w-max text-center">Режисери</td>
+                <td class="w-full text-right">{{ directors }}</td>
               </tr>
               <tr v-show="creators">
-                <td class="w-max">Сценаристи</td>
-                <td class="w-full">{{ creators }}</td>
+                <td class="w-max text-center">Сценаристи</td>
+                <td class="w-full text-right">{{ creators }}</td>
               </tr>
               <tr v-show="actors">
-                <td class="w-max">Актори</td>
-                <td class="w-full">{{ actors }}</td>
+                <td class="w-max text-center">Актори</td>
+                <td class="w-full text-right">{{ actors }}</td>
               </tr>
               <tr v-show="getInfo.detail.rating || film.rating">
-                <td class="w-max">Рейтинг</td>
-                <td class="w-full">
+                <td class="w-max text-center">Рейтинг</td>
+                <td class="w-full text-right">
                   {{ getInfo.detail.rating ? getInfo.detail.rating : film.rating }}
                 </td>
               </tr>
